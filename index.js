@@ -26,9 +26,9 @@ app.listen(PORT, async () => {
   await initDb()
   asciiArt()
 
-  if(!(await checkIfAsteriskRunning())) {
+  if (!(await checkIfAsteriskRunning())) {
     logger.error('Asterisk is not running. Please start it and try again.')
-    console.log("\n")
+    console.log('\n')
     process.exit(0)
   }
 
