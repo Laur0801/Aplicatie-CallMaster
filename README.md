@@ -1,3 +1,4 @@
+
 # Zyvo
 
 Zyvo is a dead simple asterisk configuration interface, it's not meant to be a replacement for freepbx or the likes but it's simple and feature complete enough to use for SOHO (Small Office/Home Office) purposes.
@@ -50,3 +51,7 @@ You will be able to edit these files in the advanced section as well.
 
 ### Warning
 This is very early software and some features are still being implemented and worked on, things will change dramatically over time so please proceed with caution.
+
+#### Credits
+
+[JustBoil.me](https://justboil.me/) for the awesome tailwind panel
