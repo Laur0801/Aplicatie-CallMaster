@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <%- include('partials/head.ejs') %>
+</head>
+<body>
+
+<div id="app">
+
+    <%- include('partials/nav.ejs') %>
+    <%- include('partials/aside.ejs') %>
+
+    <section class="is-title-bar">
+    <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
+        <ul>
+        <li><%= parent %></li>
+        <li><%= title %></li>
+        </ul>
+    </div>
+    </section>
+
+  <section class="section main-section">
+    <div class="card mb-6">
+      <header class="card-header">
+        <p class="card-header-title">
+          <span class="icon"><i class="mdi mdi-account-settings"></i></span>
+          Create a new queue
+        </p>
+      </header>
+      <div class="card-content">
+        <form method="get" id="create-queue-form">
+          <div class="field">
+            <label class="label">Queue Name <a class="required-field">*</a></label>
+            <div class="field-body">
+              <div class="field">
+                <div class="control icons-left">
+                  <input class="input" type="text" placeholder="Name" id="name">
+                  <span class="icon left"><i class="mdi mdi-account-settings"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Strategy <a class="required-field">*</a></label>
+            <div class="field-body">
+              <div class="field grouped multiline">
+                <div class="control">
+                  <label class="radio" id="strat-radio-0" data-tippy="Default Asterisk Call Strategy which rings all available agents until the incoming call is answered.">
+                    <input type="radio" name="strat-radio" value="ringall">
+                    <span class="check"></span>
+                    <span class="control-label">Ring All</span>
+                  </label>
+                </div>
+                <div class="control">
+                  <label class="radio" id="strat-radio-1" data-tippy="Starts by first calling the interface (agent, user, extension etc) that was least recently hung up within the queue.">
+                    <input type="radio" name="strat-radio" value="leastrecent">
+                    <span class="check"></span>
+                    <span class="control-label">Least Recent</span>
+                  </label>
+                </div>
+                <div class="control">
+                  <label class="radio" id="strat-radio-2" data-tippy="Starts by calling a random interface first.">
+                    <input type="radio" name="strat-radio" value="random">
+                    <span class="check"></span>
+                    <span class="control-label">Random</span>
+                  </label>
+                </div>
+                <div class="control">
+                  <label class="radio" id="strat-radio-2" data-tippy="Round robin system which remembers which interface answered the last incoming call and starts with the next interface in the round robin.">
+                    <input type="radio" name="strat-radio" value="rrmemory">
+                    <span class="check"></span>
+                    <span class="control-label">Round Robin Memory</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="field-body">
+              <div class="field">
+                <label class="label">Timeout (in seconds) <a class="required-field">*</a></label>
+                <div class="control icons-left">
+                  <input class="input" type="text" placeholder="15" id="timeout" value="15">
+                  <span class="icon left"><i class="mdi mdi-clock"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="field-body">
+              <div class="field">
+                <label class="label">Wrap up time (in seconds) <a class="required-field">*</a></label>
+                <div class="control icons-left">
+                  <input class="input" type="text" placeholder="5" id="wrapuptime" value="5">
+                  <span class="icon left"><i class="mdi mdi-clock"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="field-body">
+              <label class="label">Auto pause queue member<a class="required-field">*</a></label>
+              <div class="field grouped multiline">
+                <div class="control">
+                  <label class="radio" id="auto-pause-radio-0">
+                    <input type="radio" name="autopause-radio" value="yes">
+                    <span class="check"></span>
+                    <span class="control-label">Yes</span>
+                  </label>
+                </div>
+                <div class="control">
+                  <label class="radio" id="auto-pause-radio-1">
+                    <input type="radio" name="autopause-radio" value="no">
+                    <span class="check"></span>
+                    <span class="control-label">No</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="field-body">
+              <div class="field">
+                <label class="label">Queue members <a class="required-field">*</a></label>
+                <select class="queue-member-select" name="members[]" multiple="multiple" style="width:50%">
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <hr>
+
+          <div class="field grouped">
+            <div class="control">
+              <button type="submit" class="button green">
+                Submit
+              </button>
+            </div>
+            <div class="control">
+              <button type="reset" class="button red">
+                Reset
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+<%- include('partials/footer.ejs') %>
+<script src="/js/queue-general.js"></script>
+</body>
+</html>

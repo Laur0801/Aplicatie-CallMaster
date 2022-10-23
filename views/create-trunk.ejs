@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <%- include('partials/head.ejs') %>
+</head>
+<body>
+
+<div id="app">
+
+    <%- include('partials/nav.ejs') %>
+    <%- include('partials/aside.ejs') %>
+
+    <section class="is-title-bar">
+    <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
+        <ul>
+        <li><%= parent %></li>
+        <li><%= title %></li>
+        </ul>
+    </div>
+    </section>
+
+  <section class="section main-section">
+    <div class="card mb-6">
+      <header class="card-header">
+        <p class="card-header-title">
+          <span class="icon"><i class="mdi mdi-account-multiple"></i></span>
+          Create a new SIP Trunk / Gateway
+        </p>
+      </header>
+      <div class="card-content">
+        <form method="get" id="create-trunk-form">
+
+          <div class="field">
+            <label class="label">Host <a class="required-field">*</a></label>
+            <div class="field-body">
+              <div class="field">
+                <div class="control icons-left">
+                  <input class="input" type="text" placeholder="192.168.1.10" id="host">
+                  <span class="icon left"><i class="mdi mdi-server-network"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Port</label>
+            <div class="field-body">
+              <div class="field">
+                <div class="control icons-left">
+                  <input class="input" type="text" placeholder="5060" id="port">
+                  <span class="icon left"><i class="mdi mdi-serial-port"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Secret</label>
+            <div class="field-body">
+              <div class="field">
+                <div class="control icons-left">
+                  <input class="input" type="password" placeholder="secret" id="secret">
+                  <span class="icon left"><i class="mdi mdi-serial-port"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Codecs</label>
+            <div class="field-body">
+              <div class="field grouped multiline">
+                <div class="control">
+                  <label class="checkbox"><input type="checkbox" value="alaw">
+                    <span class="check"></span>
+                    <span class="control-label">alaw</span>
+                  </label>
+                </div>
+                <div class="control">
+                  <label class="checkbox"><input type="checkbox" id="cb-1" value="ulaw" checked>
+                    <span class="check"></span>
+                    <span class="control-label">ulaw</span>
+                  </label>
+                </div>
+                <div class="control">
+                  <label class="checkbox"><input type="checkbox" id="cb-2" value="g722">
+                    <span class="check is-primary"></span>
+                    <span class="control-label">g722</span>
+                  </label>
+                </div>
+                <div class="control">
+                  <label class="checkbox"><input type="checkbox" id="cb-3" value="g726">
+                    <span class="check is-primary"></span>
+                    <span class="control-label">g726</span>
+                  </label>
+                </div>
+                <div class="control">
+                  <label class="checkbox"><input type="checkbox" id="cb-4" value="g729">
+                    <span class="check is-primary"></span>
+                    <span class="control-label">g729</span>
+                  </label>
+                </div>
+                <div class="control">
+                  <label class="checkbox"><input type="checkbox" id="cb-5" value="gsm">
+                    <span class="check is-primary"></span>
+                    <span class="control-label">gsm</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr>
+
+          <div class="field grouped">
+            <div class="control">
+              <button type="submit" class="button green">
+                Submit
+              </button>
+            </div>
+            <div class="control">
+              <button type="reset" class="button red">
+                Reset
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+<%- include('partials/footer.ejs') %>
+<script src="/js/create-trunk.js"></script>
+</body>
+</html>

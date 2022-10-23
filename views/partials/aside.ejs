@@ -1,0 +1,207 @@
+<aside class="aside is-placed-left is-expanded">
+  <div class="aside-tools">
+    <div>
+      <b class="font-black text-xl">Zyvo</b>
+    </div>
+  </div>
+  <div class="menu is-menu-main">
+    <p class="menu-label">General</p>
+    <ul class="menu-list">
+      <% if(title=="Dashboard" ) { %>
+        <li class="active">
+          <% } else { %>
+        <li>
+          <% } %>
+            <a href="/">
+              <span class="icon"><i class="mdi mdi-desktop-mac"></i></span>
+              <span class="menu-item-label">Dashboard</span>
+            </a>
+        </li>
+    </ul>
+    <p class="menu-label">Configuration</p>
+    <ul class="menu-list">
+      
+      <% if(parent == "Trunk" ) { %>
+        <li class="active">
+          <% } else { %>
+        <li>
+          <% } %>
+            <a class="dropdown">
+              <span class="icon"><i class="mdi mdi-phone-voip"></i></span>
+              <span class="menu-item-label">Trunk</span>
+              <span class="icon"><i class="mdi mdi-plus"></i></span>
+            </a>
+            <ul>
+              <% if(title == "Create Trunk" ) { %>
+                <li class="active">
+                  <% } else { %>
+                <li>
+                  <% } %>
+                    <a href="/trunks/create">
+                      <span>Create Trunk</span>
+                    </a>
+                </li>
+                <% if(title.includes("Edit Trunk")) { %>
+                  <li class="active">
+                    <% } else { %>
+                  <li>
+                    <% } %>
+                      <a href="/trunks/edit">
+                        <span>Edit Trunk</span>
+                      </a>
+                  </li>
+            </ul>
+        </li>
+
+      <% if(parent=="Extensions" ) { %>
+        <li class="active">
+          <% } else { %>
+        <li>
+          <% } %>
+            <a class="dropdown">
+              <span class="icon"><i class="mdi mdi-account-multiple"></i></span>
+              <span class="menu-item-label">Extensions</span>
+              <span class="icon"><i class="mdi mdi-plus"></i></span>
+            </a>
+            <ul>
+              <% if(title == "Create extension" ) { %>
+                <li class="active">
+                  <% } else { %>
+                <li>
+                  <% } %>
+                    <a href="/extensions/create">
+                      <span>Create Extension</span>
+                    </a>
+                </li>
+                <% if(title.includes("Edit extension")) { %>
+                  <li class="active">
+                    <% } else { %>
+                  <li>
+                    <% } %>
+                      <a href="/extensions/edit">
+                        <span>Edit Extension</span>
+                      </a>
+                  </li>
+            </ul>
+        </li>
+
+        <% if(parent == "Queues" ) { %>
+          <li class="active">
+            <% } else { %>
+          <li>
+            <% } %>
+              <a class="dropdown">
+                <span class="icon"><i class="mdi mdi-account-settings"></i></span>
+                <span class="menu-item-label">Queues</span>
+                <span class="icon"><i class="mdi mdi-plus"></i></span>
+              </a>
+              <ul>
+                <% if(title == "Create Queue" ) { %>
+                  <li class="active">
+                    <% } else { %>
+                  <li>
+                    <% } %>
+                      <a href="/queues/create">
+                        <span>Create Queue</span>
+                      </a>
+                  </li>
+                  <% if(title.includes("Edit Queue")) { %>
+                    <li class="active">
+                      <% } else { %>
+                    <li>
+                      <% } %>
+                        <a href="/queues/edit">
+                          <span>Edit Queue</span>
+                        </a>
+                    </li>
+              </ul>
+          </li>
+
+        <% if(parent == "IVR" ) { %>
+          <li class="active">
+            <% } else { %>
+          <li>
+            <% } %>
+              <a class="dropdown">
+                <span class="icon"><i class="mdi mdi-robot"></i></span>
+                <span class="menu-item-label">IVR</span>
+                <span class="icon"><i class="mdi mdi-plus"></i></span>
+              </a>
+              <ul>
+                <% if(title=="Sounds" ) { %>
+                  <li class="active">
+                    <% } else { %>
+                  <li>
+                    <% } %>
+                      <a href="/ivr/sounds">
+                        <span>Sounds</span>
+                      </a>
+                  </li>
+                  <% if(title.includes("Edit extension")) { %>
+                    <li class="active">
+                      <% } else { %>
+                    <li>
+                      <% } %>
+                        <a href="/ivr/plan">
+                          <span>IVR Plan</span>
+                        </a>
+                    </li>
+              </ul>
+          </li>
+
+          <% if(parent == "Settings" ) { %>
+            <li class="active">
+              <% } else { %>
+            <li>
+              <% } %>
+                <a class="dropdown">
+                  <span class="icon"><i class="mdi mdi-settings"></i></span>
+                  <span class="menu-item-label">Settings</span>
+                  <span class="icon"><i class="mdi mdi-plus"></i></span>
+                </a>
+                <ul>
+                  <% if(title == "SIP Server Settings" ) { %>
+                    <li class="active">
+                      <% } else { %>
+                    <li>
+                      <% } %>
+                        <a href="/advanced/sip">
+                          <span>SIP Server Settings</span>
+                        </a>
+                    </li>
+                    <% if(title.includes("General Settings")) { %>
+                      <li class="active">
+                        <% } else { %>
+                      <li>
+                        <% } %>
+                          <a href="/edit/sip-general">
+                            <span>General Settings</span>
+                          </a>
+                      </li>
+                      <% if(title.includes("Advanced")) { %>
+                        <li class="active">
+                          <% } else { %>
+                        <li>
+                          <% } %>
+                            <a href="/advanced/">
+                              <span>Advnaced</span>
+                            </a>
+                        </li>
+                </ul>
+            </li>
+    </ul>
+    </ul>
+
+
+
+    <p class="menu-label">About</p>
+    <ul class="menu-list">
+      <li>
+        <a href="https://zynet.io" class="has-icon">
+          <span class="icon"><i class="mdi mdi-help-circle"></i></span>
+          <span class="menu-item-label">About</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</aside>
