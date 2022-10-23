@@ -15,6 +15,14 @@ const extenQuill = new Quill('#extenQuill', {
   }
 })
 
+const queQuill = new Quill('#queQuill', {
+  theme: 'snow',
+  modules: {
+    toolbar: false,
+    syntax: true
+  }
+})
+
 $(document).ready(async function () {
   const request = await fetch('/api/core/get_core_config')
   const data = await request.json()
@@ -28,11 +36,14 @@ $(document).ready(async function () {
 
     window.location.href = '/'
   } else {
+    console.log(data)
     const sipConf = window.atob(data.sipConf)
     const extenConf = window.atob(data.extensionsConf)
+    const queConf = window.atob(data.queuesConf)
 
     sipQuill.setText(sipConf)
     extenQuill.setText(extenConf)
+    queQuill.setText(queConf)
   }
 
   /* Get all ids starting with manual-edit- in jqeury */
@@ -73,8 +84,10 @@ $(document).ready(async function () {
             text: 'Sip config updated successfully',
             icon: 'success'
           })
+
+          window.location.reload()
         }
-      } else {
+      } else if (configType === 'extConf') {
         let extenConf = extenQuill.getText()
         extenConf = window.btoa(extenConf)
 
@@ -101,6 +114,36 @@ $(document).ready(async function () {
             text: 'Extensions config updated successfully',
             icon: 'success'
           })
+          window.location.reload()
+        }
+      } else if (configType === 'queConf') {
+        let queConf = queQuill.getText()
+        queConf = window.btoa(queConf)
+
+        const request = await fetch('/api/core/update_queues_config', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            queuesConf: queConf
+          })
+        })
+
+        const data = await request.json()
+        if (data.error) {
+          await Swal.fire({
+            title: 'Error',
+            text: 'There was an error updating the queues config',
+            icon: 'error'
+          })
+        } else {
+          await Swal.fire({
+            title: 'Success',
+            text: 'Queues config updated successfully',
+            icon: 'success'
+          })
+          window.location.reload()
         }
       }
     })

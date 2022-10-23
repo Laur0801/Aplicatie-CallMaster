@@ -4,7 +4,7 @@ const exec = promisify(require('child_process').exec)
 const fs = require('fs').promises
 
 const {
-  asteriskConfig
+  defaultUserConfig
 } = require('../utils/defaults')
 
 const {
@@ -83,23 +83,28 @@ async function coreExecute (command) {
 async function getCoreConfig () {
   let [
     sipConfData,
-    extensionsConfData
+    extensionsConfData,
+    queuesConfData
   ] = await Promise.all([
-    fs.readFile(asteriskConfig.sipConf, 'binary'),
-    fs.readFile(asteriskConfig.extensionsConf, 'binary')
+    fs.readFile(defaultUserConfig.sipConf, 'binary'),
+    fs.readFile(defaultUserConfig.extensionsConf, 'binary'),
+    fs.readFile(defaultUserConfig.queuesConf, 'binary')
   ]);
 
   [
     sipConfData,
-    extensionsConfData
+    extensionsConfData,
+    queuesConfData
   ] = await Promise.all([
     toBase64(sipConfData),
-    toBase64(extensionsConfData)
+    toBase64(extensionsConfData),
+    toBase64(queuesConfData)
   ])
 
   return {
     sipConf: sipConfData,
-    extensionsConf: extensionsConfData
+    extensionsConf: extensionsConfData,
+    queuesConf: queuesConfData
   }
 }
 

@@ -12,7 +12,7 @@ const {
 } = require('../services/core')
 
 const {
-  asteriskConfig
+  defaultUserConfig
 } = require('../utils/defaults')
 
 router.get('/action/:command', async (req, res) => {
@@ -40,7 +40,7 @@ router.post('/update_sip_config', async (req, res) => {
     sipConf = await fromBase64(sipConf)
 
     await Promise.all([
-      fs.writeFile(asteriskConfig.sipConf, sipConf),
+      fs.writeFile(defaultUserConfig.sipConf, sipConf),
       core('reload')
     ])
   } catch (error) {
@@ -62,7 +62,29 @@ router.post('/update_extensions_config', async (req, res) => {
     extensionsConf = await fromBase64(extensionsConf)
 
     await Promise.all([
-      fs.writeFile(asteriskConfig.extensionsConf, extensionsConf),
+      fs.writeFile(defaultUserConfig.extensionsConf, extensionsConf),
+      core('reload')
+    ])
+  } catch (error) {
+    console.log(error)
+    res.send({
+      error: true
+    })
+    return
+  }
+
+  res.send({
+    error: false
+  })
+})
+
+router.post('/update_queues_config', async (req, res) => {
+  try {
+    let { queuesConf } = req.body
+    queuesConf = await fromBase64(queuesConf)
+
+    await Promise.all([
+      fs.writeFile(defaultUserConfig.queuesConf, queuesConf),
       core('reload')
     ])
   } catch (error) {
