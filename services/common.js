@@ -60,7 +60,7 @@ async function commitChanges (startup = false) {
   }
 
   await Promise.all([
-    fs.writeFile(asteriskConfig.sipConf, '[general]\nbindaddr = 0.0.0.0\nbindport = 5060\nallowguest = yes\nallow = all\nallow = ulaw\nallow = alaw\nallow = g722\nallow = g729\nallowguest = yes\nnat = no\ntcpenable = no'),
+    fs.writeFile(asteriskConfig.sipConf, '[general]\nbindaddr=0.0.0.0\nbindport=5060\nallowguest=yes\nallow=all\nallow=ulaw\nallow=alaw\nallow=g722\nallow=g729\nallowguest=yes\nnat=no\ntcpenable=no'),
     fs.writeFile(asteriskConfig.extensionsConf, ''),
     fs.writeFile(asteriskConfig.queuesConf, '')
   ])

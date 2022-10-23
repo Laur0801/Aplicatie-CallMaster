@@ -11,7 +11,7 @@ async function getSettings () {
   ])
 
   const [bindAddress, bindPort] = await Promise.all([
-    (sipConfStrings.find(line => line.includes('bind='))).split('=')[1],
+    (sipConfStrings.find(line => line.includes('bindaddr='))).split('=')[1],
     (sipConfStrings.find(line => line.includes('bindport='))).split('=')[1]
   ])
 
