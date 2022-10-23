@@ -1,7 +1,8 @@
 const fs = require('fs').promises
 
 const {
-  asteriskConfig
+  asteriskConfig,
+  defaultUserConfig
 } = require('../utils/defaults')
 
 const {
@@ -46,15 +47,13 @@ async function getQueues (count = false) {
 async function commitChanges (startup = false) {
   if (startup === true) {
     const existPromiseArr = []
-    for (const value of Object.values(asteriskConfig)) {
-      console.log(value)
+    for (const value of Object.values(defaultUserConfig)) {
       existPromiseArr.push(createFileIfNotExists(value))
     }
 
     const existArr = await Promise.all(existPromiseArr)
     for (const one of existArr) {
       if (!one) {
-        console.log('')
         return false
       }
     }

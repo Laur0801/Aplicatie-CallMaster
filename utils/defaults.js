@@ -1,4 +1,8 @@
+const { exec } = require('child_process')
+
+const figlet = require('figlet');
 const defaultError = { error: true }
+const pjson = require('../package.json');
 
 const asteriskConfig = {
   sipConf: '/etc/asterisk/sip.conf',
@@ -12,8 +16,35 @@ const defaultUserConfig = {
   queuesConf: '/etc/asterisk/queues_zyvo_user.conf'
 }
 
+async function asciiArt() {
+  return new Promise((resolve, reject) => {
+    figlet('Zyvo', function (err, data) {
+      if (err) {}
+      console.log(`${data}\n\t\tv${pjson.version}\n`)
+    })
+  })
+}
+
+async function checkIfAsteriskRunning() {
+  return new Promise((resolve, reject) => {
+    exec('ps -A | grep asterisk', (err, stdout, stderr) => {
+      if (err) {
+        resolve(false)
+      }
+      if (stdout) {
+        resolve(true)
+      } else {
+        resolve(false)
+      }
+    })
+  })  
+}
+
+
 module.exports = {
+  asciiArt,
   defaultError,
   asteriskConfig,
-  defaultUserConfig
+  defaultUserConfig,
+  checkIfAsteriskRunning
 }

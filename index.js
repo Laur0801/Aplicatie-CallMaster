@@ -6,6 +6,7 @@ const { initDb } = require('./db/db')
 const { commitChanges } = require('./services/common')
 
 const { logger } = require('./utils/logger/index')
+const { asciiArt, checkIfAsteriskRunning } = require('./utils/defaults')
 
 app.set('view engine', 'ejs')
 
@@ -23,6 +24,14 @@ app.use('/', require('./routes/index'))
 
 app.listen(PORT, async () => {
   await initDb()
+  asciiArt()
+
+  if(!(await checkIfAsteriskRunning())) {
+    logger.error('Asterisk is not running. Please start it and try again.')
+    console.log("\n")
+    process.exit(0)
+  }
+
   await commitChanges(true)
   logger.info(`Zyvo server listening on port ${PORT}`)
 })

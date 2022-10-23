@@ -63,6 +63,8 @@
                       <% if(uptimeStats != 0) { %>
                         <a class="bold">Uptime: <%= uptimeStats.uptime %></a> <br>
                         <a class="pt-2">Last Reload: <%= uptimeStats.lastReload %></a>
+                      <% } else { %>
+                        <a class="bold">Asterisk Stopped</a>
                       <% } %>
                     </div>
                   </h3>
