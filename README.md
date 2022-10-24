@@ -40,7 +40,9 @@ npm run start
 To add your own custom configuration to asterisk please edit the files given below
 
 `sip_zyvo_user.conf` in place of sip.conf
+
 `extensions_zyvo_user.conf` in place of extensions.conf
+
 `queues_zyvo_user.conf` instead of queues.conf 
 
 You will be able to edit these files in the advanced section as well.
