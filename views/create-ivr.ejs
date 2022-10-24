@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <%- include('partials/head.ejs') %>
+</head>
+<body>
+
+<div id="app">
+
+    <%- include('partials/nav.ejs') %>
+    <%- include('partials/aside.ejs') %>
+
+    <section class="is-title-bar">
+    <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
+        <ul>
+        <li><%= parent %></li>
+        <li><%= title %></li>
+        </ul>
+    </div>
+    </section>
+
+  <section class="section main-section">
+    <div class="card mb-6">
+      <header class="card-header">
+        <p class="card-header-title">
+          <span class="icon"><i class="mdi mdi-account-multiple"></i></span>
+          Create a new IVR Plan
+        </p>
+      </header>
+      <div class="card-content">
+        <form method="get" id="create-ivr-form">
+          <div class="field">
+            <label class="label">Name <a class="required-field">*</a></label>
+            <div class="field-body">
+              <div class="field">
+                <div class="control icons-left">
+                  <input class="input" type="text" placeholder="Name" id="name">
+                  <span class="icon left"><i class="mdi mdi-account"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="field-body">
+              <div class="field">
+                <label class="label">Greeting Audio <a class="required-field">*</a></label>
+                <select class="greeting-audio-select" name="audiosGreeting[]" style="width:50%">
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="field-body">
+              <div class="field">
+                <label class="label">Prompt Audio <a class="required-field">*</a></label>
+                <select class="prompt-audio-select" name="prompAudios[]" style="width:50%">
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="field-body">
+              <div class="field">
+                <label class="label">Invalid Audio <a class="required-field">*</a></label>
+                <select class="invalid-audio-select" name="invalidAudios[]" style="width:50%">
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="field-body">
+              <div class="field">
+                <label class="label">Timeout Audio <a class="required-field">*</a></label>
+                <select class="timeout-audio-select" name="timeoutAudios[]" style="width:50%">
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="field-body">
+              <div class="field">
+                <label class="label">Default Extension <a class="required-field">*</a></label>
+                <select class="default-extension-select" name="defaultExtension[]" style="width:50%">
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Timeout to enter an extension number after IVR menu playback <a class="required-field">*</a></label>
+            <div class="field-body">
+              <div class="field">
+                <div class="control">
+                  <input class="input input-ivr-action-text" type="number" placeholder="5" id="timeout" value="5">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Actions when you extend <a class="required-field">*</a></label>
+            <div class="field-body">
+              <div class="field">
+                <div class="control">
+                  <div id="action-n-0">
+                    <input class="input input-ivr-action-text" type="text" placeholder="#" id="pound-0">
+                    <select class="ivr-handler-select-0" name="ivrHandlerOptions[]" style="width:50%;"></select>
+                  </div>
+                </div>
+                <br>
+                <button type="button" class="button blue pt-4" id="add-ivr-action">Add Action</button>
+              </div>
+          </div>
+
+          <hr>
+
+          <div class="field grouped">
+            <div class="control">
+              <button type="submit" class="button green">
+                Submit
+              </button>
+            </div>
+            <div class="control">
+              <button type="reset" class="button red">
+                Reset
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+<%- include('partials/footer.ejs') %>
+<script src="/js/create-ivr.js"></script>
+</body>
+</html>

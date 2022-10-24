@@ -137,15 +137,24 @@
                         <span>Sounds</span>
                       </a>
                   </li>
-                  <% if(title.includes("Edit extension")) { %>
+                  <% if(title.includes("Create")) { %>
                     <li class="active">
                       <% } else { %>
                     <li>
                       <% } %>
-                        <a href="/ivr/plan">
-                          <span>IVR Plan</span>
+                        <a href="/ivr/create">
+                          <span>Create IVR Plan</span>
                         </a>
                     </li>
+                    <% if(title.includes("Edit")) { %>
+                      <li class="active">
+                        <% } else { %>
+                      <li>
+                        <% } %>
+                          <a href="/ivr/edit">
+                            <span>Edit IVR Plans</span>
+                          </a>
+                      </li>
               </ul>
           </li>
 

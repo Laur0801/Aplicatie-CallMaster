@@ -227,3 +227,40 @@ window.editQueue = async function (id, name, strategy, timeout, wrapuptime, auto
   const response = await request.json()
   return response
 }
+
+window.getIVRs = async function () {
+  const request = await fetch('/ivr/get_all')
+  const response = await request.json()
+
+  return response
+}
+
+window.setDefaultIVR = async function (id) {
+  const request = await fetch('/ivr/set_default', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      id
+    })
+  })
+
+  const response = await request.json()
+  return response
+}
+
+window.deleteIVR = async function (id) {
+  const request = await fetch('/ivr/delete', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      id
+    })
+  })
+
+  const response = await request.json()
+  return response
+}

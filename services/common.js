@@ -49,6 +49,12 @@ async function getQueues (count = false) {
   })
 }
 
+async function getIVRs () {
+  return connect(async db => {
+    return await db.all('SELECT * FROM ivr')
+  })
+}
+
 async function commitChanges (startup = false) {
   if (startup === true) {
     const existPromiseArr = []
@@ -65,14 +71,14 @@ async function commitChanges (startup = false) {
   }
 
   /* Check if there's a default gateway */
-  const defaultTrunk = await getTrunks(false, true);
-  let [includeTrunkChunk, dialoutChunk] = [``,``];
+  const defaultTrunk = await getTrunks(false, true)
+  let [includeTrunkChunk, dialoutChunk] = ['', '']
 
-  if (defaultTrunk !== []) {
-    includeTrunkChunk = `include => dialout\n\n`;
-    dialoutChunk = `[dialout]\nexten => _X.,1,DIAL(SIP/\${EXTEN}@${defaultTrunk.name})\nexten => _X.,n,Hangup()\n\nexten => _+X.,1,Dial(SIP/\${EXTEN}@${defaultTrunk.name})\nexten => _+X.,n,Hangup()\n\n`;
+  if (defaultTrunk !== [] && defaultTrunk !== undefined) {
+    includeTrunkChunk = 'include => dialout\n\n'
+    dialoutChunk = `[dialout]\nexten => _X.,1,DIAL(SIP/\${EXTEN}@${defaultTrunk.name})\nexten => _X.,n,Hangup()\n\nexten => _+X.,1,Dial(SIP/\${EXTEN}@${defaultTrunk.name})\nexten => _+X.,n,Hangup()\n\n`
   }
-  
+
   await Promise.all([
     fs.writeFile(asteriskConfig.sipConf, '[general]\nbindaddr=0.0.0.0\nbindport=5060\nallowguest=yes\nallow=all\nallow=ulaw\nallow=alaw\nallow=g722\nallow=g729\nallowguest=yes\nnat=no\ntcpenable=no'),
     fs.writeFile(asteriskConfig.extensionsConf, `[sip_internal]\n${includeTrunkChunk}exten => _X.,1,Dial(SIP/$` + '{EXTEN}' + ')' + '\n'),
@@ -146,6 +152,7 @@ async function commitChanges (startup = false) {
 }
 
 module.exports = {
+  getIVRs,
   getTrunks,
   getExtensions,
   getQueues,

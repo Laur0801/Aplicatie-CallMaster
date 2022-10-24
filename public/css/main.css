@@ -1911,3 +1911,17 @@ footer {
 .tooltip:hover .tooltiptext {
     visibility: visible;
 }
+
+.input-ivr-action-text {
+    width: 10%;
+    height: 100%;
+    border: 1px solid #000;
+    border-radius: 5px;
+    font-family:monospace;
+    color: black;
+    background-color: white;
+}
+
+.ivr-handler-select {
+    height: 100%;
+}
