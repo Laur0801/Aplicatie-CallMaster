@@ -20,6 +20,10 @@ const {
   getTrunks
 } = require('../services/common')
 
+const {
+  getStats
+} = require('../services/stats')
+
 router.get('/', async (req, res) => {
   res.render('index', {
     title: 'Dashboard',
@@ -28,6 +32,10 @@ router.get('/', async (req, res) => {
     trunksCount: ((await getTrunks(true)).count),
     uptimeStats: await getUptime()
   })
+})
+
+router.get('/stats', async (req, res) => {
+  res.json(await getStats())
 })
 
 router.get('/extensions/create', async (req, res) => {

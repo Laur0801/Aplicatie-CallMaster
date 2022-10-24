@@ -7,6 +7,7 @@ const { commitChanges } = require('./services/common')
 
 const { logger } = require('./utils/logger/index')
 const { asciiArt, checkIfAsteriskRunning } = require('./utils/defaults')
+const { startCron } = require('./services/cron')
 
 app.set('view engine', 'ejs')
 
@@ -33,5 +34,6 @@ app.listen(PORT, async () => {
   }
 
   await commitChanges(true)
+  startCron()
   logger.info(`Zyvo server listening on port ${PORT}`)
 })
