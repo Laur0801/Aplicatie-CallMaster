@@ -49,7 +49,8 @@ You will be able to edit these files in the advanced section as well.
 - [x] Queues
 - [x] Extensions
 - [x] Trunks
-- [ ] IVR
+- [x] IVR
+- [ ] Refactor
 
 ### Warning
 This is very early software that we unironically wrote in a weekend. Some features are still being implemented and worked on, things may change dramatically over time so please proceed with caution.
