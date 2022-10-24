@@ -1181,6 +1181,23 @@ body {
     color: rgba(255, 255, 255, var(--tw-text-opacity))
 }
 
+.button.yellow {
+    --tw-bg-opacity: 1;
+    background-color: rgba(251, 191, 36, var(--tw-bg-opacity))
+}
+
+.button.yellow:hover {
+    --tw-bg-opacity: 1;
+    background-color: rgba(245, 158, 11, var(--tw-bg-opacity))
+}
+
+.button.yellow {
+    --tw-border-opacity: 1;
+    border-color: rgba(251, 191, 36, var(--tw-border-opacity));
+    --tw-text-opacity: 1;
+    color: rgba(255, 255, 255, var(--tw-text-opacity))
+}
+
 .button.red {
     --tw-bg-opacity: 1;
     background-color: rgba(239, 68, 68, var(--tw-bg-opacity))

@@ -63,7 +63,7 @@ window.removeTrunk = async function (id) {
   return response
 }
 
-window.editTrunk = async function (id, host, port, secret, codecs) {
+window.editTrunk = async function (id, host, port, secret, user, codecs, isDefault) {
   const request = await fetch('/api/trunks/update_trunk', {
     method: 'POST',
     headers: {
@@ -74,12 +74,29 @@ window.editTrunk = async function (id, host, port, secret, codecs) {
       host,
       port,
       secret,
-      codecs
+      user,
+      codecs,
+      isDefault
     })
   })
 
   const response = await request.json()
   await window.commitChanges()
+  return response
+}
+
+window.selectDefaultTrunk = async function (id) {
+  const request = await fetch('/api/trunks/set_default_trunk', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      id
+    })
+  })
+
+  const response = await request.json()
   return response
 }
 

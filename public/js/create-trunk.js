@@ -7,6 +7,7 @@ $(document).ready(async function () {
     const host = $('#host').val()
     const port = $('#port').val()
     const secret = $('#secret').val()
+    const user = $('#user').val()
 
     if (!host.match(/^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)(\.(?!$)|$)){4}$/)) {
       await Swal.fire({
@@ -30,6 +31,7 @@ $(document).ready(async function () {
       host,
       port,
       secret,
+      user,
       codecs
     }
 
@@ -57,7 +59,7 @@ $(document).ready(async function () {
 
       await commitChanges()
 
-      window.location.href = '/'
+      window.location.href = '/trunks/edit'
     }
   })
 })

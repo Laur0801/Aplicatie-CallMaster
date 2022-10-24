@@ -61,7 +61,7 @@ async function commitChanges (startup = false) {
 
   await Promise.all([
     fs.writeFile(asteriskConfig.sipConf, '[general]\nbindaddr=0.0.0.0\nbindport=5060\nallowguest=yes\nallow=all\nallow=ulaw\nallow=alaw\nallow=g722\nallow=g729\nallowguest=yes\nnat=no\ntcpenable=no'),
-    fs.writeFile(asteriskConfig.extensionsConf, ''),
+    fs.writeFile(asteriskConfig.extensionsConf, '[sip_internal]\nexten => _X.,1,Dial(SIP/$' + '{EXTEN}' +')' + '\n'),
     fs.writeFile(asteriskConfig.queuesConf, '')
   ])
 
@@ -80,7 +80,7 @@ async function commitChanges (startup = false) {
   /* Writing zyvo-sip.conf */
 
   for (let i = 0; i < extensions.length; i++) {
-    finalOutputSip += `\n[${extensions[i].extension}]\ncallerid="${extensions[i].name}" <${extensions[i].extension}>\nsecret=${extensions[i].secret}\nallow=all\ntype=peer\ntrusttrpid=yes\nsendrpid=yes\nrpid_update=yes\nhost=dynamic\ncanreinvite=no\ncontext=sip_internal\ndtmfmode=rfc2833\ndtml=rfc2833\n`
+    finalOutputSip += `\n\n[${extensions[i].extension}]\ncallerid="${extensions[i].name}" <${extensions[i].extension}>\nsecret=${extensions[i].secret}\nallow=all\ntype=peer\ntrusttrpid=yes\nsendrpid=yes\nrpid_update=yes\nhost=dynamic\ncanreinvite=no\ncontext=sip_internal\ndtmfmode=rfc2833\ndtml=rfc2833\n`
   }
 
   /* Writing zyvo-sip.conf */
@@ -101,11 +101,15 @@ async function commitChanges (startup = false) {
       portSecretStr += `secret=${trunks[i].secret}\n`
     }
 
+    if (trunks[i].user !== '') {
+      portSecretStr += `user=${trunks[i].user}\n`
+    }
+
     if (portSecretStr !== '') {
       codecsStr = codecsStr.slice(0, -1)
     }
 
-    finalOutputSip += `\n[${trunks[i].name}]\ntype=${trunks[i].type}\ncontext=${trunks[i].context}\nhost=${trunks[i].host}\nqualify=${trunks[i].qualify}\ncanreinvite=${trunks[i].canreinvite}\ninsecure=${trunks[i].insecure}\ndisallow=all\n${codecsStr}\n${portSecretStr}`
+    finalOutputSip += `\n\n[${trunks[i].name}]\ntype=${trunks[i].type}\ncontext=${trunks[i].context}\nhost=${trunks[i].host}\nqualify=${trunks[i].qualify}\ncanreinvite=${trunks[i].canreinvite}\ninsecure=${trunks[i].insecure}\ndisallow=all\n${codecsStr}\n${portSecretStr}`
   }
 
   /* Writing zyvo-queues.conf */

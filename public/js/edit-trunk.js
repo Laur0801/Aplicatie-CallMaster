@@ -1,4 +1,4 @@
-/* global $, Swal, codecsSrc, editTrunk */
+/* global $, Swal, codecsSrc, editTrunk, isDefault */
 
 $(document).ready(async function () {
   const codecsArr = codecsSrc.split(',')
@@ -15,6 +15,7 @@ $(document).ready(async function () {
     const host = $('#host').val()
     const port = $('#port').val()
     const secret = $('#secret').val()
+    const user = $('#user').val()
 
     const url = new URL(window.location.href)
     const pathname = ((url.pathname).split('/'))
@@ -36,7 +37,7 @@ $(document).ready(async function () {
     }
 
     const codecs = checkedArr.join(',')
-    const response = await editTrunk(id, host, port, secret, codecs)
+    const response = await editTrunk(id, host, port, secret, user, codecs, isDefault)
 
     if (response.error === false) {
       await Swal.fire({

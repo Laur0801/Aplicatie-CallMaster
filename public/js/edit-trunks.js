@@ -14,6 +14,12 @@ $(document).ready(async function () {
   const tableBody = $('#editTrunkList')
 
   trunks.forEach(trunk => {
+    let defaultTd = ''
+
+    if (trunk.isDefault !== 0) {
+      defaultTd = '<span><i class="mdi mdi-check-circle"></i></span>'
+    }
+
     const trunkRow = $(`
             <tr>
                 <td data-label="name">${trunk.name}</td>
@@ -22,12 +28,18 @@ $(document).ready(async function () {
                 <td data-label="created">
                     <small class="text-gray-500" title="${trunk.created_at}">${trunk.created_at}</small>
                 </td>
+                <td> 
+                    ${defaultTd}
+                </td>
                 <td class="actions-cell">
                     <div class="buttons right nowrap">
-                        <button class="button small green --jb-modal ext-act-button" data-trunkid="${trunk.id}" type="button">
+                        <button class="button small green --jb-modal ext-act-button" data-trunkid="${trunk.id}" type="button" title="Select Default">
+                            <span class="icon"><i class="mdi mdi-check-circle"></i></span>
+                        </button>
+                        <button class="button small yellow --jb-modal ext-act-button" data-trunkid="${trunk.id}" type="button" title="Edit">
                             <span class="icon"><i class="mdi mdi-eye"></i></span>
                         </button>
-                        <button class="button small red --jb-modal ext-act-button" data-trunkid="${trunk.id}" type="button">
+                        <button class="button small red --jb-modal ext-act-button" data-trunkid="${trunk.id}" type="button" title="Delete">
                             <span class="icon"><i class="mdi mdi-trash-can"></i></span>
                         </button>
                     </div>
@@ -41,7 +53,16 @@ $(document).ready(async function () {
   $('.ext-act-button').click(async function () {
     const trunkId = $(this).data('trunkid')
     console.log(trunkId)
-    const actionType = $(this).find('i').hasClass('mdi-eye') ? 'view' : 'remove'
+    let actionType = ''
+
+    if ($(this).find('i').hasClass('mdi-eye')) {
+      actionType = 'view'
+    } else if ($(this).find('i').hasClass('mdi-trash-can')) {
+      actionType = 'remove'
+    } else if ($(this).find('i').hasClass('mdi-check-circle')) {
+      actionType = 'select-default'
+    }
+
     if (actionType === 'remove') {
       const result = await Swal.fire({
         title: 'Are you sure?',
@@ -76,8 +97,31 @@ $(document).ready(async function () {
           window.location.reload()
         }
       }
-    } else {
+    } else if (actionType === 'view') {
       window.location.href = `/trunks/edit/${trunkId}`
+    } else if (actionType === 'select-default') {
+      const res = await window.selectDefaultTrunk(trunkId)
+      if (res.updated === true) {
+        await Swal.fire({
+          title: 'Success',
+          text: 'Default trunk updated',
+          icon: 'success',
+          timer: 2000,
+          showConfirmButton: false
+        })
+
+        window.location.reload()
+      } else {
+        await Swal.fire({
+          title: 'Error',
+          text: 'An error occurred while updating default trunk',
+          icon: 'error',
+          timer: 2000,
+          showConfirmButton: false
+        })
+
+        window.location.reload()
+      }
     }
   })
 })
