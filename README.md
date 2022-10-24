@@ -1,5 +1,7 @@
 
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 # Zyvo
+
 
 Zyvo is a dead simple asterisk configuration interface, it's not meant to be a replacement for freepbx or the likes but it's simple and feature complete enough to use for SOHO (Small Office/Home Office) purposes.
 
@@ -50,7 +52,7 @@ You will be able to edit these files in the advanced section as well.
 - [ ] IVR
 
 ### Warning
-This is very early software and some features are still being implemented and worked on, things will change dramatically over time so please proceed with caution.
+This is very early software that we unironically wrote in a weekend. Some features are still being implemented and worked on, things may change dramatically over time so please proceed with caution.
 
 #### Credits
 
