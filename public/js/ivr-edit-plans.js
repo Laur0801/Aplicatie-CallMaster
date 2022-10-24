@@ -19,8 +19,10 @@ $(document).ready(async function () {
 
     let defaultTd = ''
 
-    if (IVR.isDefault !== 0) {
-      defaultTd = '<span><i class="mdi mdi-check-circle"></i></span>'
+    if (IVR.isDefault !== 0 && IVR.isDefault !== null && IVR.isDefault !== 'NULL' && IVR.isDefault !== '0') {
+      defaultTd = '<span><i class="mdi mdi-check-circle" titls="Default"></i></span>'
+    } else {
+      defaultTd = '<span><i class="mdi mdi-alert-octagram" title="Not default"></i></span>'
     }
 
     const IVRRow = $(`

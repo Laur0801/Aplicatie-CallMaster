@@ -49,8 +49,12 @@ async function getQueues (count = false) {
   })
 }
 
-async function getIVRs () {
+async function getIVRs (isDefault = false) {
   return connect(async db => {
+    if (isDefault) {
+      return await db.all('SELECT * FROM ivr WHERE isDefault = 1')
+    }
+
     return await db.all('SELECT * FROM ivr')
   })
 }
@@ -70,18 +74,37 @@ async function commitChanges (startup = false) {
     }
   }
 
-  /* Check if there's a default gateway */
-  const defaultTrunk = await getTrunks(false, true)
-  let [includeTrunkChunk, dialoutChunk] = ['', '']
+  /* Check if there's a default gateway and IVR */
+  let [defaultTrunk, defaultIVR] = await Promise.all([getTrunks(false, true), getIVRs(true)])
+  let [includeTrunkChunk, dialoutChunk, ivrChunk, fromTrunkChunk] = ['', '', '', '']
 
   if (defaultTrunk !== [] && defaultTrunk !== undefined) {
     includeTrunkChunk = 'include => dialout\n\n'
     dialoutChunk = `[dialout]\nexten => _X.,1,DIAL(SIP/\${EXTEN}@${defaultTrunk.name})\nexten => _X.,n,Hangup()\n\nexten => _+X.,1,Dial(SIP/\${EXTEN}@${defaultTrunk.name})\nexten => _+X.,n,Hangup()\n\n`
   }
 
+  if (defaultIVR !== [] && defaultIVR !== undefined) {
+    defaultIVR = defaultIVR[0]
+    fromTrunkChunk = `[from-siptrunk]\ninclude => sip_internal\nexten => _X.,1,ringing\nexten => _X.,n,Goto(${defaultIVR.context},s,1)\nexten => s,n,Hangup()\n\n`
+
+    const parsedOptions = JSON.parse(defaultIVR.menumap)
+    ivrChunk = `[${defaultIVR.context}]\ninclude => sip_internal\n\nexten => 0,1,Playback(${defaultIVR.timeout_audio})\nexten => 0,2,Playback(beep)\nexten => 0,3,Hangup()\n\nexten => s,1,Wait(1)\nexten => s,2,Background(${defaultIVR.greeting_audio})\nexten => s,3,Wait(2)\nexten => s,4,Background(${defaultIVR.prompt_audio})\nexten => s,5,WaitExten(${defaultIVR.timeout})\n\n`
+
+    for (const option of parsedOptions) {
+      if (option.type === 'extension') {
+        ivrChunk += `exten => ${option.key},1,Dial(SIP/${option.do})\n`
+      } else if (option.type === 'queue') {
+        ivrChunk += `exten => ${option.key},1,Queue(${option.do})\n`
+      }
+    }
+
+    ivrChunk += '\n'
+    ivrChunk += `exten => i,1,Playback(${defaultIVR.invalid_audio})\nexten => i,2,Goto(s,3)\n\nexten => t,1,Goto(0,1)`
+  }
+
   await Promise.all([
     fs.writeFile(asteriskConfig.sipConf, '[general]\nbindaddr=0.0.0.0\nbindport=5060\nallowguest=yes\nallow=all\nallow=ulaw\nallow=alaw\nallow=g722\nallow=g729\nallowguest=yes\nnat=no\ntcpenable=no'),
-    fs.writeFile(asteriskConfig.extensionsConf, `[sip_internal]\n${includeTrunkChunk}exten => _X.,1,Dial(SIP/$` + '{EXTEN}' + ')' + '\n'),
+    fs.writeFile(asteriskConfig.extensionsConf, `${fromTrunkChunk}\n\n${ivrChunk}\n\n[sip_internal]\n${includeTrunkChunk}exten => _X.,1,Dial(SIP/$` + '{EXTEN}' + ')' + '\n'),
     fs.writeFile(asteriskConfig.queuesConf, '')
   ])
 
