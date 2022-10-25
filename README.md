@@ -52,6 +52,7 @@ You will be able to edit these files in the advanced section as well.
 - [x] Extensions
 - [x] Trunks
 - [x] IVR
+- [x] Authentication
 - [ ] Refactor
 
 ### Warning
