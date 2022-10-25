@@ -17,7 +17,9 @@ const {
   defaultError
 } = require('../utils/defaults')
 
-router.get('/get_extensions', async (req, res) => {
+const { ensureAuthenticated } = require('../services/auth')
+
+router.get('/get_extensions', ensureAuthenticated, async (req, res) => {
   try {
     const extensions = await getExtensions()
     res.send(extensions)
@@ -27,7 +29,7 @@ router.get('/get_extensions', async (req, res) => {
   }
 })
 
-router.post('/create_extension', async (req, res) => {
+router.post('/create_extension', ensureAuthenticated, async (req, res) => {
   try {
     const { name, extension, secret } = req.body
 
@@ -46,7 +48,7 @@ router.post('/create_extension', async (req, res) => {
   }
 })
 
-router.post('/delete_extension', async (req, res) => {
+router.post('/delete_extension', ensureAuthenticated, async (req, res) => {
   try {
     const { id } = req.body
     const result = await deleteExtension(id)
@@ -57,7 +59,7 @@ router.post('/delete_extension', async (req, res) => {
   }
 })
 
-router.post('/update_extension', async (req, res) => {
+router.post('/update_extension', ensureAuthenticated, async (req, res) => {
   try {
     const { id, name, extension, secret } = req.body
     await updateExtension(id, name, extension, secret)
@@ -70,7 +72,7 @@ router.post('/update_extension', async (req, res) => {
   res.send({ error: false })
 })
 
-router.post('/commit_changes', async (req, res) => {
+router.post('/commit_changes', ensureAuthenticated, async (req, res) => {
   try {
     await commitChanges()
   } catch (error) {

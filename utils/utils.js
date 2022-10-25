@@ -2,6 +2,7 @@ const { promisify } = require('util')
 
 const fs = require('fs').promises
 const exec = promisify(require('child_process').exec)
+const crypto = require('crypto')
 
 async function toBase64 (text) {
   let retVal = ''
@@ -65,11 +66,18 @@ async function createFileIfNotExists (path) {
   return ret
 }
 
+async function sha256 (string) {
+  const hash = crypto.createHash('sha256')
+  hash.update(string)
+  return hash.digest('hex')
+}
+
 module.exports = {
   toBase64,
   fromBase64,
   fileToStrings,
   convertMP3toWAV,
   checkIfPathExists,
-  createFileIfNotExists
+  createFileIfNotExists,
+  sha256
 }

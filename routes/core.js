@@ -15,7 +15,9 @@ const {
   defaultUserConfig
 } = require('../utils/defaults')
 
-router.get('/action/:command', async (req, res) => {
+const { ensureAuthenticated } = require('../services/auth')
+
+router.get('/action/:command', ensureAuthenticated, async (req, res) => {
   const action = req.params.command
   const result = await core(action)
   res.send({
@@ -23,7 +25,7 @@ router.get('/action/:command', async (req, res) => {
   })
 })
 
-router.get('/get_core_config', async (req, res) => {
+router.get('/get_core_config', ensureAuthenticated, async (req, res) => {
   try {
     const coreConfig = await getCoreConfig()
     res.send(coreConfig)
@@ -34,7 +36,7 @@ router.get('/get_core_config', async (req, res) => {
   }
 })
 
-router.post('/update_sip_config', async (req, res) => {
+router.post('/update_sip_config', ensureAuthenticated, async (req, res) => {
   try {
     let { sipConf } = req.body
     sipConf = await fromBase64(sipConf)
@@ -56,7 +58,7 @@ router.post('/update_sip_config', async (req, res) => {
   })
 })
 
-router.post('/update_extensions_config', async (req, res) => {
+router.post('/update_extensions_config', ensureAuthenticated, async (req, res) => {
   try {
     let { extensionsConf } = req.body
     extensionsConf = await fromBase64(extensionsConf)

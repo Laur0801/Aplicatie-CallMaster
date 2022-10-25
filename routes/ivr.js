@@ -20,7 +20,9 @@ const {
   getMaxId
 } = require('../services/ivr')
 
-router.post('/sounds/upload', async function (req, res) {
+const { ensureAuthenticated } = require('../services/auth')
+
+router.post('/sounds/upload', ensureAuthenticated, async function (req, res) {
   const form = formidable({ multiples: false })
   form.parse(req, async (err, fields, files) => {
     if (err) {
@@ -45,7 +47,7 @@ router.post('/sounds/upload', async function (req, res) {
   })
 })
 
-router.post('/sounds/delete', async function (req, res) {
+router.post('/sounds/delete', ensureAuthenticated, async function (req, res) {
   const { name } = req.body
   const astFilePath = path.join((await getSoundsDirectory()), name)
   try {
@@ -59,14 +61,14 @@ router.post('/sounds/delete', async function (req, res) {
   res.json({ error: false })
 })
 
-router.get('/sounds', async (req, res) => {
+router.get('/sounds', ensureAuthenticated, async (req, res) => {
   res.render('ivr-sounds', {
     parent: 'IVR',
     title: 'Sounds'
   })
 })
 
-router.get('/get_sounds', async (req, res) => {
+router.get('/get_sounds', ensureAuthenticated, async (req, res) => {
   try {
     const sounds = await getAllSounds()
     res.json(sounds)
@@ -75,7 +77,7 @@ router.get('/get_sounds', async (req, res) => {
   }
 })
 
-router.get('/get_all', async (req, res) => {
+router.get('/get_all', ensureAuthenticated, async (req, res) => {
   try {
     const ivrs = await getIVRs()
     res.json(ivrs)
@@ -84,21 +86,21 @@ router.get('/get_all', async (req, res) => {
   }
 })
 
-router.get('/create', async (req, res) => {
+router.get('/create', ensureAuthenticated, async (req, res) => {
   res.render('create-ivr', {
     parent: 'IVR',
     title: 'Create Plan'
   })
 })
 
-router.get('/edit', async (req, res) => {
+router.get('/edit', ensureAuthenticated, async (req, res) => {
   res.render('edit-ivr-plans', {
     parent: 'IVR',
     title: 'Edit'
   })
 })
 
-router.get('/edit/:id', async (req, res) => {
+router.get('/edit/:id', ensureAuthenticated, async (req, res) => {
   const { id } = req.params
   const ivrDetails = await getIVR(id)
 
@@ -109,13 +111,13 @@ router.get('/edit/:id', async (req, res) => {
   })
 })
 
-router.post('/edit', async (req, res) => {
+router.post('/edit', ensureAuthenticated, async (req, res) => {
   const { id, name, greetingAudio, promptAudio, invalidAudio, timeoutAudio, defaultExtension, timeout, actions } = req.body
   const resp = await updateIVR(id, name, greetingAudio, promptAudio, invalidAudio, timeoutAudio, defaultExtension, timeout, actions, 0)
   res.json(resp)
 })
 
-router.post('/set_default', async (req, res) => {
+router.post('/set_default', ensureAuthenticated, async (req, res) => {
   const { id } = req.body
   try {
     await setDefaultIVR(id)
@@ -126,7 +128,7 @@ router.post('/set_default', async (req, res) => {
   }
 })
 
-router.post('/create', async (req, res) => {
+router.post('/create', ensureAuthenticated, async (req, res) => {
   const { name, greetingAudio, promptAudio, invalidAudio, timeoutAudio, defaultExtension, timeout, actions } = req.body
   const newId = (!((await getMaxId()).max)) ? 1 : (parseInt(((await getMaxId()).max)) + 1)
   const created = await createIVR(newId, name, greetingAudio, promptAudio, invalidAudio, timeoutAudio, defaultExtension, timeout, actions)
@@ -134,7 +136,7 @@ router.post('/create', async (req, res) => {
   res.json(created)
 })
 
-router.post('/delete', async (req, res) => {
+router.post('/delete', ensureAuthenticated, async (req, res) => {
   const { id } = req.body
   const deleted = await deleteIVR(id)
 

@@ -4,6 +4,7 @@ const router = express.Router()
 const { getMaxId, createTrunk, deleteTrunk, updateTrunk, setDefaultTrunk } = require('../services/trunks')
 const { getTrunks } = require('../services/common')
 const { defaultError } = require('../utils/defaults')
+const { ensureAuthenticated } = require('../services/auth')
 
 router.get('/get_trunks', async (req, res) => {
   try {
@@ -15,7 +16,7 @@ router.get('/get_trunks', async (req, res) => {
   }
 })
 
-router.post('/create_trunk', async (req, res) => {
+router.post('/create_trunk', ensureAuthenticated, async (req, res) => {
   try {
     const { host, codecs, port, secret, user } = req.body
 
@@ -34,7 +35,7 @@ router.post('/create_trunk', async (req, res) => {
   }
 })
 
-router.post('/update_trunk', async (req, res) => {
+router.post('/update_trunk', ensureAuthenticated, async (req, res) => {
   try {
     const { id, host, codecs, port, secret, isDefault, user } = req.body
 
@@ -52,7 +53,7 @@ router.post('/update_trunk', async (req, res) => {
   res.send({ error: false })
 })
 
-router.post('/delete_trunk', async (req, res) => {
+router.post('/delete_trunk', ensureAuthenticated, async (req, res) => {
   try {
     const { id } = req.body
     const result = await deleteTrunk(id)
@@ -63,7 +64,7 @@ router.post('/delete_trunk', async (req, res) => {
   }
 })
 
-router.post('/set_default_trunk', async (req, res) => {
+router.post('/set_default_trunk', ensureAuthenticated, async (req, res) => {
   try {
     const { id } = req.body
     const result = await setDefaultTrunk(id)

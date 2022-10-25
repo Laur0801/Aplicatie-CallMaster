@@ -75,7 +75,7 @@ async function commitChanges (startup = false) {
   }
 
   /* Check if there's a default gateway and IVR */
-  let [defaultTrunk, defaultIVR] = await Promise.all([getTrunks(false, true), getIVRs(true)])
+  const [defaultTrunk, defaultIVR] = await Promise.all([getTrunks(false, true), getIVRs(true)])
   let [includeTrunkChunk, dialoutChunk, ivrChunk, fromTrunkChunk] = ['', '', '', '']
 
   if (defaultTrunk !== [] && defaultTrunk !== undefined) {
@@ -83,12 +83,12 @@ async function commitChanges (startup = false) {
     dialoutChunk = `[dialout]\nexten => _X.,1,DIAL(SIP/\${EXTEN}@${defaultTrunk.name})\nexten => _X.,n,Hangup()\n\nexten => _+X.,1,Dial(SIP/\${EXTEN}@${defaultTrunk.name})\nexten => _+X.,n,Hangup()\n\n`
   }
 
-  if (defaultIVR !== [] && defaultIVR !== undefined) {
-    defaultIVR = defaultIVR[0]
-    fromTrunkChunk = `[from-siptrunk]\ninclude => sip_internal\nexten => _X.,1,ringing\nexten => _X.,n,Goto(${defaultIVR.context},s,1)\nexten => s,n,Hangup()\n\n`
+  if (defaultIVR.length !== 0 && defaultIVR !== undefined && defaultIVR !== []) {
+    const selDefaultIVR = defaultIVR[0]
+    fromTrunkChunk = `[from-siptrunk]\ninclude => sip_internal\nexten => _X.,1,ringing\nexten => _X.,n,Goto(${selDefaultIVR.context},s,1)\nexten => s,n,Hangup()\n\n`
 
-    const parsedOptions = JSON.parse(defaultIVR.menumap)
-    ivrChunk = `[${defaultIVR.context}]\ninclude => sip_internal\n\nexten => 0,1,Playback(${defaultIVR.timeout_audio})\nexten => 0,2,Playback(beep)\nexten => 0,3,Hangup()\n\nexten => s,1,Wait(1)\nexten => s,2,Background(${defaultIVR.greeting_audio})\nexten => s,3,Wait(2)\nexten => s,4,Background(${defaultIVR.prompt_audio})\nexten => s,5,WaitExten(${defaultIVR.timeout})\n\n`
+    const parsedOptions = JSON.parse(selDefaultIVR.menumap)
+    ivrChunk = `[${selDefaultIVR.context}]\ninclude => sip_internal\n\nexten => 0,1,Playback(${selDefaultIVR.timeout_audio})\nexten => 0,2,Playback(beep)\nexten => 0,3,Hangup()\n\nexten => s,1,Wait(1)\nexten => s,2,Background(${selDefaultIVR.greeting_audio})\nexten => s,3,Wait(2)\nexten => s,4,Background(${selDefaultIVR.prompt_audio})\nexten => s,5,WaitExten(${selDefaultIVR.timeout})\n\n`
 
     for (const option of parsedOptions) {
       if (option.type === 'extension') {
@@ -99,7 +99,7 @@ async function commitChanges (startup = false) {
     }
 
     ivrChunk += '\n'
-    ivrChunk += `exten => i,1,Playback(${defaultIVR.invalid_audio})\nexten => i,2,Goto(s,3)\n\nexten => t,1,Goto(0,1)`
+    ivrChunk += `exten => i,1,Playback(${selDefaultIVR.invalid_audio})\nexten => i,2,Goto(s,3)\n\nexten => t,1,Goto(0,1)`
   }
 
   await Promise.all([
@@ -163,7 +163,11 @@ async function commitChanges (startup = false) {
   }
 
   finalOutputSip += '\n\n#include sip_zyvo_user.conf\n'
-  finalOutputExtensions += `\n${dialoutChunk}\n\n#include extensions_zyvo_user.conf\n`
+  if (dialoutChunk !== '') {
+    finalOutputExtensions += `\n${dialoutChunk}\n\n#include extensions_zyvo_user.conf\n`
+  } else {
+    finalOutputExtensions += '\n\n#include extensions_zyvo_user.conf\n'
+  }
   finalOutputQueues += '#include queues_zyvo_user.conf\n'
 
   await Promise.all([

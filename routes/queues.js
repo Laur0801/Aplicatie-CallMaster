@@ -17,7 +17,9 @@ const {
   defaultError
 } = require('../utils/defaults')
 
-router.get('/get_queues', async (req, res) => {
+const { ensureAuthenticated } = require('../services/auth')
+
+router.get('/get_queues', ensureAuthenticated, async (req, res) => {
   try {
     const queues = await getQueues()
     res.send(queues)
@@ -27,7 +29,7 @@ router.get('/get_queues', async (req, res) => {
   }
 })
 
-router.post('/create_queue', async (req, res) => {
+router.post('/create_queue', ensureAuthenticated, async (req, res) => {
   try {
     const {
       name,
@@ -54,7 +56,7 @@ router.post('/create_queue', async (req, res) => {
   }
 })
 
-router.post('/delete_queue', async (req, res) => {
+router.post('/delete_queue', ensureAuthenticated, async (req, res) => {
   try {
     const { id } = req.body
     const result = await deleteQueue(id)
@@ -67,7 +69,7 @@ router.post('/delete_queue', async (req, res) => {
   }
 })
 
-router.post('/update_queue', async (req, res) => {
+router.post('/update_queue', ensureAuthenticated, async (req, res) => {
   try {
     const {
       id,
@@ -89,7 +91,7 @@ router.post('/update_queue', async (req, res) => {
   res.send({ error: false })
 })
 
-router.post('delete_queue', async (req, res) => {
+router.post('delete_queue', ensureAuthenticated, async (req, res) => {
   try {
     const { id } = req.body
     const result = await deleteQueue(id)

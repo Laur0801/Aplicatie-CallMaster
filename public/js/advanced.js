@@ -161,4 +161,50 @@ $(document).ready(async function () {
     /* output to textarea cliOutput */
     $('#cliOutput').val(res.result)
   })
+
+  $('#credential-change').submit(async function (e) {
+    e.preventDefault()
+
+    const userName = $('#username').val()
+    const password = $('#password').val()
+    const password2 = $('#password2').val()
+
+    if (password !== password2) {
+      await Swal.fire({
+        title: 'Error',
+        text: 'Passwords do not match',
+        icon: 'error'
+      })
+
+      return
+    }
+
+    const request = await fetch('/auth/change', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        user: userName,
+        password
+      })
+    })
+
+    const data = await request.json()
+    if (data.error !== false) {
+      await Swal.fire({
+        title: 'Error',
+        text: 'Could not change credentials',
+        icon: 'error'
+      })
+    } else {
+      await Swal.fire({
+        title: 'Success',
+        text: 'Credentials changed successfully',
+        icon: 'success'
+      })
+
+      window.location.href = '/auth/logout'
+    }
+  })
 })

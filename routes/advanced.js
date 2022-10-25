@@ -3,8 +3,9 @@ const router = express.Router()
 
 const { coreExecute } = require('../services/core')
 const { getSettings, setCoreSettings } = require('../services/advanced')
+const { ensureAuthenticated } = require('../services/auth')
 
-router.post('/cli', async (req, res) => {
+router.post('/cli', ensureAuthenticated, async (req, res) => {
   const { command } = req.body
   try {
     const result = await coreExecute(command)
@@ -14,14 +15,14 @@ router.post('/cli', async (req, res) => {
   }
 })
 
-router.get('/', async (req, res) => {
+router.get('/', ensureAuthenticated, async (req, res) => {
   res.render('advanced', {
     parent: 'Settings',
     title: 'Advanced'
   })
 })
 
-router.get('/sip', async (req, res) => {
+router.get('/sip', ensureAuthenticated, async (req, res) => {
   res.render('advanced-sip', {
     parent: 'Settings',
     title: 'SIP Server Settings',
@@ -29,7 +30,7 @@ router.get('/sip', async (req, res) => {
   })
 })
 
-router.post('/sip/edit', async (req, res) => {
+router.post('/sip/edit', ensureAuthenticated, async (req, res) => {
   const { bindAddr, bindPort } = req.body
   try {
     await setCoreSettings(bindAddr, bindPort)
