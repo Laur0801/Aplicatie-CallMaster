@@ -16,28 +16,13 @@ $(document).ready(async function () {
 
   for (let i = 0; i < IVRs.length; i++) {
     const IVR = IVRs[i]
-
-    let defaultTd = ''
-
-    if (IVR.isDefault !== 0 && IVR.isDefault !== null && IVR.isDefault !== 'NULL' && IVR.isDefault !== '0') {
-      defaultTd = '<span><i class="mdi mdi-check-circle" titls="Default"></i></span>'
-    } else {
-      defaultTd = '<span><i class="mdi mdi-alert-octagram" title="Not default"></i></span>'
-    }
-
     const IVRRow = $(`
             <tr>
-                <td data-label="Default">
-                  ${defaultTd}
-                </td>
                 <td data-label="Name">${IVR.name}</td>
                 <td data-label="Default Extension">${IVR.default_extension}</td>
                 <td data-label="Created">${IVR.created_at}</td>
                 <td class="actions-cell">
                 <div class="buttons right nowrap">
-                    <button class="button small green --jb-modal ivr-act-button" data-ivrid="${IVR.id}" type="button" title="Select Default">
-                      <span class="icon"><i class="mdi mdi-check-circle"></i></span>
-                    </button>
                     <button class="button small yellow --jb-modal ivr-act-button" data-ivrid="${IVR.id}" type="button" title="Edit IVR">
                         <span class="icon"><i class="mdi mdi-eye"></i></span>
                     </button>

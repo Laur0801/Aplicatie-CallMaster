@@ -16,9 +16,8 @@ $(document).ready(async function () {
   trunks.forEach(trunk => {
     let defaultTd = ''
 
-    if (trunk.isDefault !== 0) {
-      defaultTd = '<span><i class="mdi mdi-check-circle"></i></span>'
-    }
+    const defaultAction = (JSON.parse(trunk.default_action))
+    defaultTd = `<span>${defaultAction.do}/${defaultAction.id}</span>`
 
     const trunkRow = $(`
             <tr>
@@ -33,9 +32,6 @@ $(document).ready(async function () {
                 </td>
                 <td class="actions-cell">
                     <div class="buttons right nowrap">
-                        <button class="button small green --jb-modal ext-act-button" data-trunkid="${trunk.id}" type="button" title="Select Default">
-                            <span class="icon"><i class="mdi mdi-check-circle"></i></span>
-                        </button>
                         <button class="button small yellow --jb-modal ext-act-button" data-trunkid="${trunk.id}" type="button" title="Edit">
                             <span class="icon"><i class="mdi mdi-eye"></i></span>
                         </button>

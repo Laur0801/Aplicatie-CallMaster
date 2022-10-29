@@ -63,7 +63,7 @@ window.removeTrunk = async function (id) {
   return response
 }
 
-window.editTrunk = async function (id, host, port, secret, user, codecs, isDefault) {
+window.editTrunk = async function (id, host, port, secret, user, codecs, gatewayExten, gatewayExtenPass, defaultAction) {
   const request = await fetch('/api/trunks/update_trunk', {
     method: 'POST',
     headers: {
@@ -76,7 +76,9 @@ window.editTrunk = async function (id, host, port, secret, user, codecs, isDefau
       secret,
       user,
       codecs,
-      isDefault
+      gatewayExten,
+      gatewayExtenPass,
+      defaultAction
     })
   })
 

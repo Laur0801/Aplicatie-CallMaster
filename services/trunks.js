@@ -13,7 +13,10 @@ async function createTrunk (
   port,
   secret,
   user,
-  codecs
+  codecs,
+  gateway_extension,
+  gateway_extension_password,
+  default_action
 ) {
   return connect(async db => {
     const [
@@ -32,8 +35,11 @@ async function createTrunk (
       const gwPort = (port !== '') ? port : ''
       const gwSecret = (secret !== '') ? secret : ''
       const gwUser = (user !== '') ? user : ''
+      const gatewayExtension = (gateway_extension !== '') ? gateway_extension : ''
+      const gatewayExtensionPassword = (gateway_extension_password !== '') ? gateway_extension_password : ''
+      const gwDefaultAction = (default_action !== '') ? default_action : ''
 
-      await db.run('INSERT INTO trunks (id, name, type, context, host, port, secret, user, qualify, canreinvite, insecure, codecs, isDefault) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [id,
+      await db.run('INSERT INTO trunks (id, name, type, context, host, port, secret, user, qualify, canreinvite, insecure, codecs, gateway_extension, gateway_extension_secret, default_action) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [id,
         gwName,
         gwType,
         gwContext,
@@ -45,7 +51,9 @@ async function createTrunk (
         gwCanrenivite,
         gwInsecure,
         codecs,
-        0])
+        gatewayExtension,
+        gatewayExtensionPassword,
+        gwDefaultAction])
       await commitChanges()
       return { error: false, created: true }
     } else {
@@ -65,20 +73,14 @@ async function deleteTrunk (id) {
   })
 }
 
-async function setDefaultTrunk (id) {
+async function updateTrunk (id, host, port, secret, user, codecs, gateway_extension, gateway_extension_password, default_action) {
   return connect(async db => {
-    await db.run('UPDATE trunks SET isDefault = 0')
-    await db.run(`UPDATE trunks SET isDefault = 1 WHERE id = ${id}`)
-    await commitChanges()
-
-    return { updated: true }
-  })
-}
-
-async function updateTrunk (id, host, port, secret, user, codecs, isDefault) {
-  return connect(async db => {
-    await db.run(`UPDATE trunks SET host = '${host}', port = '${port}', secret = '${secret}', user = '${user}', codecs = '${codecs}', isDefault = ${isDefault} WHERE ID = ${id};`)
-    await commitChanges()
+    try {
+      await db.run(`UPDATE trunks SET host = '${host}', port = '${port}', secret = '${secret}', user = '${user}', codecs = '${codecs}', gateway_extension = '${gateway_extension}', gateway_extension_secret = '${gateway_extension_password}', default_action = '${default_action}' WHERE ID = ${id};`)
+      await commitChanges()
+    } catch (error) {
+      console.log(error)
+    }
   })
 }
 
@@ -87,7 +89,7 @@ async function reorder () {
   await connect(async db => {
     await db.run('DELETE FROM trunks')
     for (let i = 0; i < trunks.length; i++) {
-      await db.run('INSERT INTO trunks (id, name, type, context, host, port, secret, user, qualify, canreinvite, insecure, codecs, isDefault) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [i,
+      await db.run('INSERT INTO trunks (id, name, type, context, host, port, secret, user, qualify, canreinvite, insecure, codecs, gateway_extension, gateway_extension_secret, default_action) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [i,
         trunks[i].name,
         trunks[i].type,
         trunks[i].context,
@@ -99,7 +101,10 @@ async function reorder () {
         trunks[i].canreinvite,
         trunks[i].insecure,
         trunks[i].codecs,
-        trunks[i].default])
+        trunks[i].gateway_extension,
+        trunks[i].gateway_extension_secret,
+        trunks[i].default_dial_extension,
+        trunks[i].default_action])
     }
     await commitChanges()
   })
@@ -112,7 +117,6 @@ async function getOneTrunk (id) {
 }
 
 module.exports = {
-  setDefaultTrunk,
   createTrunk,
   deleteTrunk,
   updateTrunk,

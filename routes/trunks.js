@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-const { getMaxId, createTrunk, deleteTrunk, updateTrunk, setDefaultTrunk } = require('../services/trunks')
+const { getMaxId, createTrunk, deleteTrunk, updateTrunk } = require('../services/trunks')
 const { getTrunks } = require('../services/common')
 const { defaultError } = require('../utils/defaults')
 const { ensureAuthenticated } = require('../services/auth')
@@ -18,15 +18,16 @@ router.get('/get_trunks', async (req, res) => {
 
 router.post('/create_trunk', ensureAuthenticated, async (req, res) => {
   try {
-    const { host, codecs, port, secret, user } = req.body
-
-    if (!host || !codecs) {
+    const { host, codecs, port, secret, user, gatewayExten, gatewayExtenPass, defaultAction } = req.body
+    if (!host || !codecs || !gatewayExten || !gatewayExtenPass || !defaultAction) {
       res.send({ error: true, message: 'Missing parameters' })
       return
     }
 
+    console.log(defaultAction)
+
     const newId = (!((await getMaxId()).max)) ? 1 : (parseInt(((await getMaxId()).max)) + 1)
-    const result = await createTrunk(newId, host, port, secret, user, codecs)
+    const result = await createTrunk(newId, host, port, secret, user, codecs, gatewayExten, gatewayExtenPass, defaultAction)
 
     res.send(result)
   } catch (error) {
@@ -37,14 +38,14 @@ router.post('/create_trunk', ensureAuthenticated, async (req, res) => {
 
 router.post('/update_trunk', ensureAuthenticated, async (req, res) => {
   try {
-    const { id, host, codecs, port, secret, isDefault, user } = req.body
+    const { id, host, codecs, port, secret, user, gatewayExten, gatewayExtenPass, defaultAction } = req.body
 
-    if (!id || !host) {
+    if (!id || !host || !codecs || !gatewayExten || !gatewayExtenPass || !defaultAction) {
       res.send({ error: true, message: 'Missing parameters' })
       return
     }
 
-    await updateTrunk(id, host, port, secret, user, codecs, isDefault)
+    await updateTrunk(id, host, port, secret, user, codecs, gatewayExten, gatewayExtenPass, defaultAction)
   } catch (error) {
     console.log(error)
     res.send(defaultError)
@@ -57,17 +58,6 @@ router.post('/delete_trunk', ensureAuthenticated, async (req, res) => {
   try {
     const { id } = req.body
     const result = await deleteTrunk(id)
-    res.send(result)
-  } catch (error) {
-    console.log(error)
-    res.send(defaultError)
-  }
-})
-
-router.post('/set_default_trunk', ensureAuthenticated, async (req, res) => {
-  try {
-    const { id } = req.body
-    const result = await setDefaultTrunk(id)
     res.send(result)
   } catch (error) {
     console.log(error)

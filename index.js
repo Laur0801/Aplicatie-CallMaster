@@ -12,6 +12,8 @@ const { logger } = require('./utils/logger/index')
 const { asciiArt, checkIfAsteriskRunning } = require('./utils/defaults')
 const { startCron } = require('./services/cron')
 
+require('./services/agi')
+
 app.set('view engine', 'ejs')
 app.use(express.json())
 app.use(express.urlencoded({ extended: true })) // support encoded bodies

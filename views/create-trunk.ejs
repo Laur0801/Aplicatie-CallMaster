@@ -54,6 +54,40 @@
             </div>
           </div>
 
+          <div class="field" id="gw-id-field" data-tippy="Specify the extension you'd like to use on your gateway">
+            <label class="label">Gateway Identifier <a class="required-field">*</a></label>
+            <div class="field-body">
+              <div class="field">
+                <div class="control icons-left">
+                  <input class="input" type="text" placeholder="7777" id="gatewayExten" value="" autocomplete="off">
+                  <span class="icon left"><i class="mdi mdi-account-card-details"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field" id="gw-id-secret-field" data-tippy="Specify the password for the extension you'd like to use on your gateway">
+            <label class="label">Gateway Identifier Password <a class="required-field">*</a></label>
+            <div class="field-body">
+              <div class="field">
+                <div class="control icons-left">
+                  <input class="input" type="text" placeholder="7777" id="gatewayExtenPass" value="" autocomplete="off">
+                  <span class="icon left"><i class="mdi mdi-account-card-details"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field" id="gw-id-default-action" data-tippy="The default action that should happen once the gateway reaches asterisk">
+            <div class="field-body">
+              <div class="field">
+                <label class="label">Default Action <a class="required-field">*</a></label>
+                <select class="gw-default-action" name="defaultAction[]" style="width:50%">
+                </select>
+              </div>
+            </div>
+          </div>
+
           <div class="field">
             <label class="label">Username</label>
             <div class="field-body">
@@ -83,7 +117,7 @@
             <div class="field-body">
               <div class="field grouped multiline">
                 <div class="control">
-                  <label class="checkbox"><input type="checkbox" value="alaw">
+                  <label class="checkbox"><input type="checkbox" id="cb-0" value="alaw">
                     <span class="check"></span>
                     <span class="control-label">alaw</span>
                   </label>

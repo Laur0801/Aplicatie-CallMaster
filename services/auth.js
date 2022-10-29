@@ -3,7 +3,7 @@ module.exports = {
     if (req.isAuthenticated()) {
       return next()
     }
-    res.redirect('/login?error=You+must+be+logged+in+to+view+that+resource')
+    res.redirect('/login')
   },
   forwardAuthenticated: function (req, res, next) {
     if (!req.isAuthenticated()) {
