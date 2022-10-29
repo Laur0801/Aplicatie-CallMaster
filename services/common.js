@@ -297,7 +297,7 @@ async function commitChanges (startup = false) {
     writeQueuesconf()
   ])
 
-  core("reload")
+  core('reload')
 }
 
 module.exports = {

@@ -14,9 +14,9 @@ async function createTrunk (
   secret,
   user,
   codecs,
-  gateway_extension,
-  gateway_extension_password,
-  default_action
+  gatewayExtension,
+  gatewayExtensionPassword,
+  defaultAction
 ) {
   return connect(async db => {
     const [
@@ -35,9 +35,9 @@ async function createTrunk (
       const gwPort = (port !== '') ? port : ''
       const gwSecret = (secret !== '') ? secret : ''
       const gwUser = (user !== '') ? user : ''
-      const gatewayExtension = (gateway_extension !== '') ? gateway_extension : ''
-      const gatewayExtensionPassword = (gateway_extension_password !== '') ? gateway_extension_password : ''
-      const gwDefaultAction = (default_action !== '') ? default_action : ''
+      const gwExtension = (gatewayExtension !== '') ? gatewayExtension : ''
+      const gwExtensionPassword = (gatewayExtensionPassword !== '') ? gatewayExtensionPassword : ''
+      const gwDefaultAction = (defaultAction !== '') ? defaultAction : ''
 
       await db.run('INSERT INTO trunks (id, name, type, context, host, port, secret, user, qualify, canreinvite, insecure, codecs, gateway_extension, gateway_extension_secret, default_action) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [id,
         gwName,
@@ -51,8 +51,8 @@ async function createTrunk (
         gwCanrenivite,
         gwInsecure,
         codecs,
-        gatewayExtension,
-        gatewayExtensionPassword,
+        gwExtension,
+        gwExtensionPassword,
         gwDefaultAction])
       await commitChanges()
       return { error: false, created: true }
@@ -73,10 +73,10 @@ async function deleteTrunk (id) {
   })
 }
 
-async function updateTrunk (id, host, port, secret, user, codecs, gateway_extension, gateway_extension_password, default_action) {
+async function updateTrunk (id, host, port, secret, user, codecs, gatewayExtension, gatewayExtensionPassword, defaultAction) {
   return connect(async db => {
     try {
-      await db.run(`UPDATE trunks SET host = '${host}', port = '${port}', secret = '${secret}', user = '${user}', codecs = '${codecs}', gateway_extension = '${gateway_extension}', gateway_extension_secret = '${gateway_extension_password}', default_action = '${default_action}' WHERE ID = ${id};`)
+      await db.run(`UPDATE trunks SET host = '${host}', port = '${port}', secret = '${secret}', user = '${user}', codecs = '${codecs}', gateway_extension = '${gatewayExtension}', gateway_extension_secret = '${gatewayExtensionPassword}', default_action = '${defaultAction}' WHERE ID = ${id};`)
       await commitChanges()
     } catch (error) {
       console.log(error)
