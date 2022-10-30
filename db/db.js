@@ -25,11 +25,12 @@ async function initDb () {
     await db.exec('CREATE TABLE IF NOT EXISTS queues (id INTEGER PRIMARY KEY, name TEXT, musicclass TEXT, strategy TEXT, timeout TEXT, wrapuptime TEXT, autopause TEXT, members TEXT, created_at datetime default current_timestamp)')
     await db.exec('CREATE TABLE IF NOT EXISTS ivr (id INTEGER PRIMARY KEY, name TEXT, context TEXT, timeout TEXT, greeting_audio TEXT, prompt_audio TEXT, invalid_audio TEXT, timeout_audio TEXT,default_extension TEXT, menumap TEXT, isDefault INTEGER, created_at datetime default current_timestamp)')
     await db.exec('CREATE TABLE IF NOT EXISTS stats (id INTEGER PRIMARY KEY, asterisk_stats TEXT, zyvo_stats TEXT, created_at datetime default current_timestamp)')
-
+    await db.exec('CREATE TABLE IF NOT EXISTS settings (bind_ip TEXT, bind_port TEXT, default_gateway_map TEXT)')
     const users = await db.all('SELECT * FROM users')
     if (users.length === 0) {
       const password = await sha256('unwinddaftpuffin')
       await db.run('INSERT INTO users (user, password) VALUES (?, ?)', 'admin', password)
+      await db.run('INSERT INTO settings (bind_ip, bind_port, default_gateway_map) VALUES (?, ?, ?)', '0.0.0.0', '5060', '')
     }
   })
 }

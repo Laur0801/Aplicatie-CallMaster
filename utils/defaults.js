@@ -7,7 +7,9 @@ const pjson = require('../package.json')
 const asteriskConfig = {
   sipConf: '/etc/asterisk/sip.conf',
   extensionsConf: '/etc/asterisk/extensions.conf',
-  queuesConf: '/etc/asterisk/queues.conf'
+  queuesConf: '/etc/asterisk/queues.conf',
+  managerConf: '/etc/asterisk/manager.conf',
+  modulesConf: '/etc/asterisk/modules.conf'
 }
 
 const defaultUserConfig = {

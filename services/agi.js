@@ -1,9 +1,20 @@
+const {
+  logger
+} = require('../utils/logger')
+
+const {
+  getSettings
+} = require('./advanced')
+
 const workingGateways = []
 
 const AGIServer = require('ding-dong')
-const ami = require('asterisk-manager')('5038', '127.0.0.1', 'admin', 'unwinddaftpuffin', true)
+const ami = require('asterisk-manager')('5038', '127.0.0.1', 'admin', 'zyvo', true)
 ami.keepConnected()
-ami.action({ action: 'SIPpeers' }, function () {})
+
+async function actionSipPeers () {
+  ami.action({ action: 'SIPpeers' }, function () {})
+}
 
 ami.on('managerevent', function (evt) {
   if (evt.objectname !== undefined) {
@@ -16,10 +27,23 @@ ami.on('managerevent', function (evt) {
 })
 
 const handler = function (context) {
-  context.onEvent('variables').then(function (vars) {
-    let toCall = vars.agi_dnid
-    toCall = toCall.substring(1)
-    context.exec('Dial', `SIP/${toCall}@${workingGateways[0]}`, '60', 'tT').then(function (res) {
+  context.onEvent('variables').then(async function (vars) {
+    const numberToCall = vars.agi_dnid
+    const prefix = (numberToCall).toString()[0]
+    const rmPrefix = numberToCall.substring(1)
+    const rawSettings = await getSettings()
+
+    let gateway = ''
+
+    if (rawSettings.default_gateway_map === '') {
+      gateway = workingGateways[0]
+    } else {
+      const gwSettings = JSON.parse((rawSettings).default_gateway_map)
+      gateway = Object.keys(gwSettings).find(key => gwSettings[key] === prefix)
+    }
+
+    logger.info(`Calling SIP/${rmPrefix}`)
+    context.exec('Dial', `SIP/${rmPrefix}@${gateway}`, '60', 'tT').then(function (res) {
       context.end()
     })
   })
@@ -27,3 +51,8 @@ const handler = function (context) {
 
 const agi = new AGIServer(handler)
 agi.start(3333)
+
+module.exports = {
+  workingGateways,
+  actionSipPeers
+}

@@ -17,6 +17,10 @@ const {
   core
 } = require('./core')
 
+const {
+  logger
+} = require('../utils/logger')
+
 async function getExtensions (count = false) {
   return connect(async db => {
     if (count) {
@@ -55,6 +59,12 @@ async function getIVRs (isDefault = false) {
   })
 }
 
+async function getSettings () {
+  return connect(async db => {
+    return await db.get('SELECT * FROM settings')
+  })
+}
+
 async function commitFsCheck () {
   const existPromiseArr = []
   for (const value of Object.values(defaultUserConfig)) {
@@ -68,23 +78,47 @@ async function commitFsCheck () {
     }
   }
 
+  let managerConfStr = ''
+  managerConfStr += '[general]\n'
+  managerConfStr += 'enabled=yes\n'
+  managerConfStr += 'port=5038\n'
+  managerConfStr += 'bindaddr=0.0.0.0\n\n'
+
+  managerConfStr += '[admin]\n'
+  managerConfStr += 'secret=zyvo\n'
+  managerConfStr += 'permit=0.0.0.0/0.0.0.0\n'
+  managerConfStr += 'read = all,system,call,user,dtmf\n'
+  managerConfStr += 'write = all,system,call,user,dtmf\n'
+
+  let moduleConfStr = ''
+  moduleConfStr += '[modules]\n'
+  moduleConfStr += 'autoload=yes\n\n'
+  moduleConfStr += 'require => chan_sip.so\n'
+
+  await Promise.all([
+    fs.writeFile(asteriskConfig.managerConf, managerConfStr),
+    fs.writeFile(asteriskConfig.modulesConf, moduleConfStr)
+  ])
+
   return true
 }
 
 async function writeSipConf () {
   const [
     trunks,
-    extensions
+    extensions,
+    settings
   ] = await Promise.all([
     getTrunks(),
-    getExtensions()
+    getExtensions(),
+    getSettings()
   ])
 
   let finString = ''
 
   finString += '[general]\n'
-  finString += 'bindaddr=0.0.0.0\n'
-  finString += 'bindport=5060\n'
+  finString += `bindaddr=${settings.bind_ip}\n`
+  finString += `bindport=${settings.bind_port}\n`
   finString += 'allowguest=yes\n'
   finString += 'allow=all\n'
   finString += 'allow=ulaw\n'
@@ -242,7 +276,7 @@ async function writeExtensionsConf () {
   }
 
   let dialoutStr = '\n\n[dialout]\n'
-  dialoutStr += 'exten => _9X.,1,AGI(agi://localhost:3333)\n'
+  dialoutStr += 'exten => _X.,1,AGI(agi://localhost:3333)\n'
 
   const includeStr = '\n\n#include extensions_zyvo_user.conf\n'
 
@@ -289,6 +323,8 @@ async function commitChanges (startup = false) {
       console.log('Error: Filesystem check failed')
       process.exit(1)
     }
+
+    logger.info('Wrote configuration files for asterisk')
   }
 
   await Promise.all([

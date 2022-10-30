@@ -1,45 +1,22 @@
-const fs = require('fs').promises
-
-const { asteriskConfig } = require('../utils/defaults')
-const { fileToStrings } = require('../utils/utils')
+const { connect } = require('../db/db')
 const { commitChanges } = require('./common')
 
 async function getSettings () {
-  const { sipConf } = asteriskConfig
-  const [sipConfStrings] = await Promise.all([
-    fileToStrings(sipConf)
-  ])
-
-  const [bindAddress, bindPort] = await Promise.all([
-    (sipConfStrings.find(line => line.includes('bindaddr='))).split('=')[1],
-    (sipConfStrings.find(line => line.includes('bindport='))).split('=')[1]
-  ])
-
-  return {
-    bindAddress,
-    bindPort
-  }
+  return connect(async db => {
+    const settings = await db.get('SELECT * FROM settings')
+    return settings
+  })
 }
 
-async function setCoreSettings (bindAddr, bindPort) {
-  const { sipConf } = asteriskConfig
-  const [sipConfStrings] = await Promise.all([
-    fileToStrings(sipConf)
-  ])
+async function setCoreSettings (bindAddr, bindPort, gatewayMap) {
+  return connect(async db => {
+    const hostBindAddr = bindAddr
+    const hostBindPort = bindPort
+    const hostGwMap = gatewayMap
 
-  const sipConfStringsNew = sipConfStrings.map(line => {
-    if (line.includes('bind=')) {
-      return `bind=${bindAddr}`
-    } else if (line.includes('bindport=')) {
-      return `bindport=${bindPort}`
-    } else {
-      return line
-    }
+    await db.run('UPDATE settings SET bind_ip = ?, bind_port = ?, default_gateway_map = ?', [hostBindAddr, hostBindPort, hostGwMap])
+    await commitChanges()
   })
-
-  const sipConfStr = sipConfStringsNew.join('\n')
-  await fs.writeFile(sipConf, sipConfStr)
-  await commitChanges()
 }
 
 module.exports = {

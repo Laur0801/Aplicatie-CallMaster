@@ -5,10 +5,21 @@ const { getMaxId, createTrunk, deleteTrunk, updateTrunk } = require('../services
 const { getTrunks } = require('../services/common')
 const { defaultError } = require('../utils/defaults')
 const { ensureAuthenticated } = require('../services/auth')
+const { workingGateways } = require('../services/agi')
 
 router.get('/get_trunks', async (req, res) => {
   try {
     const trunks = await getTrunks()
+    res.send(trunks)
+  } catch (error) {
+    console.log(error)
+    res.send(defaultError)
+  }
+})
+
+router.get('/get_online', async (req, res) => {
+  try {
+    const trunks = workingGateways
     res.send(trunks)
   } catch (error) {
     console.log(error)

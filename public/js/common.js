@@ -129,7 +129,7 @@ window.runCLICommand = async function (cmd) {
   return response
 }
 
-window.updateSipSettings = async function (bindAddr, bindPort) {
+window.updateSipSettings = async function (bindAddr, bindPort, gatewayMap) {
   const request = await fetch('/advanced/sip/edit', {
     method: 'POST',
     headers: {
@@ -137,7 +137,8 @@ window.updateSipSettings = async function (bindAddr, bindPort) {
     },
     body: JSON.stringify({
       bindAddr,
-      bindPort
+      bindPort,
+      gatewayMap
     })
   })
 

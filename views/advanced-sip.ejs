@@ -40,7 +40,7 @@
                                       <div class="field">
                                         <label class="label">Bind Address <a class="required-field">*</a></label>
                                         <div class="control icons-left">
-                                          <input class="input" type="text" placeholder="" id="bindAddr" value="<%= settings.bindAddress %>">
+                                          <input class="input" type="text" placeholder="" id="bindAddr" value="<%= settings.bind_ip %>">
                                           <span class="icon left"><i class="mdi mdi-lan-connect"></i></span>
                                         </div>
                                       </div>
@@ -51,12 +51,17 @@
                                       <div class="field">
                                         <label class="label">Bind Port <a class="required-field">*</a></label>
                                         <div class="control icons-left">
-                                          <input class="input" type="text" placeholder="" id="bindPort" value="<%= settings.bindPort %>">
+                                          <input class="input" type="text" placeholder="" id="bindPort" value="<%= settings.bind_port %>">
                                           <span class="icon left"><i class="mdi mdi-serial-port"></i></span>
                                         </div>
                                       </div>
                                     </div>
                                   </div>
+
+                                  <div id="trunk-settings">
+                                    
+                                  </div>
+
                                   <div class="field grouped">
                                     <div class="control">
                                       <button type="submit" class="button red">
@@ -70,6 +75,9 @@
                 </section>
     </div>
     <%- include('partials/footer.ejs') %>
+        <script> 
+            const gatewayMapFrom = '<%- settings.default_gateway_map %>'
+        </script>
         <script src="/js/common.js"></script>
         <script src="/js/advanced-sip.js"></script>
 </body>
