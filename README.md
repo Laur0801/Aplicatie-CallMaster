@@ -5,7 +5,7 @@
 
 Zyvo is a dead simple asterisk configuration interface, it's not meant to be a replacement for freepbx or the likes but it's simple and feature complete enough to use for SOHO (Small Office/Home Office) purposes.
 
-![screenshot](https://i.imgur.com/g36PsiU.png)
+![screenshot](https://i.imgur.com/SfQV8Zs.png)
 Zyvo assumes a green-field install and will **overwrite** any and all existing configuration in the files sip.conf, extensions.conf and queues.conf. Zyvo also uses chan_sip instead of pjsip.
 
 ## Prerequisites
