@@ -11,6 +11,7 @@ const { commitChanges } = require('./services/common')
 const { logger } = require('./utils/logger/index')
 const { asciiArt, checkIfAsteriskRunning } = require('./utils/defaults')
 const { startCron } = require('./services/cron')
+const { actionSipPeers } = require('./services/agi')
 
 require('./services/agi')
 
@@ -51,7 +52,11 @@ app.listen(PORT, async () => {
     process.exit(0)
   }
 
-  await commitChanges(true)
+  await Promise.all([
+    actionSipPeers(),
+    commitChanges(true)
+  ])
+
   startCron()
   logger.info(`Zyvo server listening on port ${PORT}`)
 })

@@ -41,7 +41,7 @@ $(document).ready(async function () {
 
   for (let i = 0; i < extensions.length; i++) {
     extensionsActions.push({
-      text: `Extension/${extensions[i].name}`,
+      text: `Extension/${extensions[i].extension}`,
       id: extensions[i].id
     })
   }

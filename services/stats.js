@@ -9,7 +9,7 @@ const puPromise = promisify(pidusage)
 
 async function getAsteriskPid () {
   try {
-    let { stdout } = await execPromise('ps -ef | grep asterisk | grep -v grep | awk \'{print $2}\'')
+    let { stdout } = await execPromise('ps -ef | grep asterisk | grep -v grep | grep -v rasterisk | awk \'{print $2}\'')
     stdout = stdout.replace(/\n/g, '')
     return parseInt(stdout)
   } catch (error) {

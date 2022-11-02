@@ -40,6 +40,9 @@ const handler = function (context) {
     } else {
       const gwSettings = JSON.parse((rawSettings).default_gateway_map)
       gateway = Object.keys(gwSettings).find(key => gwSettings[key] === prefix)
+      if (gateway === '') {
+        gateway = workingGateways[0]
+      }
     }
 
     logger.info(`Calling SIP/${rmPrefix}`)

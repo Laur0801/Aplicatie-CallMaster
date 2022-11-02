@@ -1,3 +1,5 @@
+/* eslint no-template-curly-in-string: 0*/
+
 const fs = require('fs').promises
 
 const {
@@ -214,8 +216,11 @@ async function writeExtensionsConf () {
     getExtensions()
   ])
 
+  let globDefaultAction
+
   for (const trunk of trunks) {
     const defaultAction = (JSON.parse(trunk.default_action))
+    globDefaultAction = defaultAction
     if (defaultAction.do === 'Extension') {
       fromTrunkToExtenStr += '\n\n[from-siptrunk]\ninclude => sip_internal\n'
       fromTrunkToExtenStr += `exten => _X.,1,GotoIf($[${trunk.gateway_extension} = \${EXTEN}]?passed:failed)\n`
@@ -225,7 +230,8 @@ async function writeExtensionsConf () {
 
     if (defaultAction.do === 'IVR') {
       fromTrunkToIvrStr += '\n\n[from-siptrunk]\ninclude => sip_internal\n'
-      fromTrunkToIvrStr += `exten => _X.,1,GotoIf($[${trunk.gateway_extension} = \${EXTEN}]?passed:failed)\n`
+      fromTrunkToIvrStr += 'exten => _X.,1,Verbose(0, Exten is ${EXTEN}) \n'
+      fromTrunkToIvrStr += `exten => _X.,n,GotoIf($[${trunk.gateway_extension} = \${EXTEN}]?passed:failed)\n`
       fromTrunkToIvrStr += `exten => _X.,n(passed),Goto(ivr_${defaultAction.id},s,1)\n`
       fromTrunkToIvrStr += 'exten => _X.,n(failed),Hangup()\n\n'
 
@@ -235,14 +241,15 @@ async function writeExtensionsConf () {
       const selectedIvr = ivrs.find(ivr => ivr.name === defaultAction.id)
 
       fromTrunkToIvrStr += `exten => 0,1,Playback(${selectedIvr.timeout_audio})\n`
-      fromTrunkToIvrStr += 'exten => 0,2,Playback(beep)\n'
-      fromTrunkToIvrStr += 'exten => 0,3,Hangup()\n\n'
+      fromTrunkToIvrStr += 'exten => 0,2,Hangup()\n\n'
 
-      fromTrunkToIvrStr += 'exten => s,1,Wait(2)\n'
-      fromTrunkToIvrStr += `exten => s,2,Background(${selectedIvr.greeting_audio})\n`
-      fromTrunkToIvrStr += 'exten => s,3,Wait(2)\n'
-      fromTrunkToIvrStr += `exten => s,4,Background(${selectedIvr.prompt_audio})\n`
-      fromTrunkToIvrStr += `exten => s,5,WaitExten(${selectedIvr.timeout})\n\n`
+      fromTrunkToIvrStr += 'exten => s,1,Set(loop=0)\n'
+      fromTrunkToIvrStr += 'exten => s,2,Set(loop=$[${loop}+1])\n'
+      fromTrunkToIvrStr += 'exten => s,3,Answer(1500)\n'
+      fromTrunkToIvrStr += `exten => s,4,Background(${selectedIvr.greeting_audio})\n`
+      fromTrunkToIvrStr += 'exten => s,5,Wait(2)\n'
+      fromTrunkToIvrStr += `exten => s,6,Background(${selectedIvr.prompt_audio})\n`
+      fromTrunkToIvrStr += `exten => s,7,WaitExten(${selectedIvr.timeout})\n\n`
 
       for (const option of JSON.parse(selectedIvr.menumap)) {
         if (option.type === 'extension') {
@@ -254,9 +261,11 @@ async function writeExtensionsConf () {
 
       fromTrunkToIvrStr += '\n'
       fromTrunkToIvrStr += `exten => i,1,Playback(${selectedIvr.invalid_audio})\n`
-      fromTrunkToIvrStr += 'exten => i,2,Goto(s,3)\n\n'
+      fromTrunkToIvrStr += 'exten => i,2,GotoIf($[${loop}<2]?s,2)\n'
+      fromTrunkToIvrStr += 'exten => i,3,Goto(s,3)\n\n'
 
-      fromTrunkToIvrStr += 'exten => t,1,Goto(0,1)\n'
+      fromTrunkToIvrStr += 'exten => t,1,GotoIf($[${loop}<2]?s,2)\n'
+      fromTrunkToIvrStr += 'exten => t,2,Goto(0,1)\n\n'
     }
 
     if (defaultAction.do === 'Queue') {
@@ -274,6 +283,8 @@ async function writeExtensionsConf () {
   for (const extension of extensions) {
     extensionsStr += `exten => ${extension.extension},1,Dial(SIP/${extension.extension})\n`
   }
+
+  extensionsStr += `exten => 1999,1,Goto(ivr_${globDefaultAction.id},s,1)\n`
 
   let dialoutStr = '\n\n[dialout]\n'
   dialoutStr += 'exten => _X.,1,AGI(agi://localhost:3333)\n'
