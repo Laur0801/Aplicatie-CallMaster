@@ -1,4 +1,4 @@
-/* eslint no-template-curly-in-string: 0*/
+/* eslint no-template-curly-in-string: 0 */
 
 const fs = require('fs').promises
 
