@@ -1,4 +1,4 @@
-window.getExtensions = async function () {
+window.loadExts = async function () {
   const request = await fetch('/api/extensions/get_extensions')
   const response = await request.json()
 
@@ -40,68 +40,6 @@ window.editExtension = async function (id, name, extension, secret) {
   return response
 }
 
-window.getTrunks = async function () {
-  const request = await fetch('/api/trunks/get_trunks')
-  const response = await request.json()
-
-  return response
-}
-
-window.removeTrunk = async function (id) {
-  const request = await fetch('/api/trunks/delete_trunk', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      id
-    })
-  })
-
-  const response = await request.json()
-  await window.commitChanges()
-  return response
-}
-
-window.editTrunk = async function (id, host, port, secret, user, codecs, gatewayExten, gatewayExtenPass, defaultAction) {
-  const request = await fetch('/api/trunks/update_trunk', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      id,
-      host,
-      port,
-      secret,
-      user,
-      codecs,
-      gatewayExten,
-      gatewayExtenPass,
-      defaultAction
-    })
-  })
-
-  const response = await request.json()
-  await window.commitChanges()
-  return response
-}
-
-window.selectDefaultTrunk = async function (id) {
-  const request = await fetch('/api/trunks/set_default_trunk', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      id
-    })
-  })
-
-  const response = await request.json()
-  return response
-}
-
 window.commitChanges = async function () {
   const request = await fetch('/api/extensions/commit_changes', {
     method: 'POST',
@@ -139,28 +77,6 @@ window.updateSipSettings = async function (bindAddr, bindPort, gatewayMap) {
       bindAddr,
       bindPort,
       gatewayMap
-    })
-  })
-
-  const response = await request.json()
-  return response
-}
-
-window.getAllSounds = async function () {
-  const request = await fetch('/ivr/get_sounds')
-  const response = await request.json()
-
-  return response
-}
-
-window.removeSound = async function (name) {
-  const request = await fetch('/ivr/sounds/delete', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      name
     })
   })
 
@@ -224,43 +140,6 @@ window.editQueue = async function (id, name, strategy, timeout, wrapuptime, auto
       wrapuptime,
       autopause,
       members
-    })
-  })
-
-  const response = await request.json()
-  return response
-}
-
-window.getIVRs = async function () {
-  const request = await fetch('/ivr/get_all')
-  const response = await request.json()
-
-  return response
-}
-
-window.setDefaultIVR = async function (id) {
-  const request = await fetch('/ivr/set_default', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      id
-    })
-  })
-
-  const response = await request.json()
-  return response
-}
-
-window.deleteIVR = async function (id) {
-  const request = await fetch('/ivr/delete', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      id
     })
   })
 

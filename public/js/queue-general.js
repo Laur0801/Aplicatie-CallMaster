@@ -1,187 +1,144 @@
-/* global $, Swal, getExtensions, getQueues, tippy, createQueue, qMembers, qAutoPause, qStrategy, qId, editQueue, deleteQueue  */
+/* global $, Swal, loadExts, getQueues, tippy, createQueue, qAutoPause, qStrategy, qId, editQueue, deleteQueue */
 
 $(document).ready(async function () {
   const [
     extensions,
     queues
   ] = await Promise.all([
-    getExtensions(),
+    loadExts(),
     getQueues()
-  ])
+  ]);
 
-  const isCreate = window.location.pathname.includes('create')
+  const isCreate = window.location.pathname.includes('create');
 
   if (extensions.length < 1) {
     Swal.fire({
-      title: 'No extensions found',
-      text: 'Please add an extension before continuing',
+      title: 'Nu s-au găsit extensii',
+      text: 'Te rog adaugă o extensie înainte de a continua',
       icon: 'error',
-      confirmButtonText: 'Add extension'
+      confirmButtonText: 'Adaugă extensie'
     }).then((result) => {
       if (result.isConfirmed) {
-        window.location.href = '/extensions/create'
+        window.location.href = '/extensions/create';
       } else {
-        window.location.href = '/'
+        window.location.href = '/';
       }
-    })
+    });
   }
 
   if (queues.length < 1 && !isCreate) {
     Swal.fire({
-      title: 'No queues found',
-      text: 'Please add a queue before continuing',
+      title: 'Nu s-au găsit apeluri în așteptare',
+      text: 'Te rog adaugă o intrare înainte de a continua',
       icon: 'error',
-      confirmButtonText: 'Add queue'
+      confirmButtonText: 'Adaugă intrare'
     }).then((result) => {
       if (result.isConfirmed) {
-        window.location.href = '/queues/create'
+        window.location.href = '/queues/create';
       } else {
-        window.location.href = '/'
+        window.location.href = '/';
       }
-    })
+    });
   } else {
-    $('#editQueueTable').removeAttr('hidden')
+    $('#editQueueTable').removeAttr('hidden');
   }
 
-  const stratRadios = $('[id^=strat-]')
+  const stratRadios = $('[id^=strat-]');
   stratRadios.each(async function (oneRadio) {
-    const element = stratRadios[oneRadio]
+    const element = stratRadios[oneRadio];
     tippy(`#${element.id}`, {
       content: (stratRadios[oneRadio]).dataset.tippy
-    })
-  })
-
-  const select2Arr = []
-  for (let i = 0; i < extensions.length; i++) {
-    select2Arr.push({
-      id: extensions[i].extension,
-      text: `${extensions[i].name}/${extensions[i].extension}`
-    })
-  }
+    });
+  });
 
   if (isCreate) {
-    $('.queue-member-select').select2({
-      data: select2Arr
-    })
-
     $('#create-queue-form').submit(async function (e) {
-      e.preventDefault()
+      e.preventDefault();
 
-      const name = $('#name').val()
-      const strategy = $('input[name="strat-radio"]:checked').val()
-      const timeout = $('#timeout').val()
-      const wrapuptime = $('#wrapuptime').val()
-      const autopause = $('input[name="autopause-radio"]:checked').val()
-      const members = $('.queue-member-select').select2('data')
+      const nume = $('#name').val();
+      const strategie = $('input[name="strat-radio"]:checked').val();
+      const timeout = $('#timeout').val();
+      const autopauza = $('input[name="autopause-radio"]:checked').val();
 
-      const membersArr = []
-      for (let i = 0; i < members.length; i++) {
-        membersArr.push(members[i].id)
-      }
-
-      const membersStr = membersArr.join(',')
-
-      const res = await createQueue(name, strategy, timeout, wrapuptime, autopause, membersStr)
+      const res = await createQueue(nume, strategie, timeout, autopauza);
       if (res.error === true) {
         Swal.fire({
-          title: 'Error',
-          text: 'Could not create queue',
+          title: 'Eroare',
+          text: 'Nu se poate crea intrarea!',
           icon: 'error'
-        })
+        });
       } else {
         Swal.fire({
-          title: 'Success',
-          text: 'Queue created',
+          title: 'Succes',
+          text: 'Intrare creată',
           icon: 'success'
         }).then((result) => {
           if (result.isConfirmed) {
-            window.location.href = '/'
+            window.location.href = '/';
           }
-        })
+        });
       }
-    })
+    });
 
-    return
+    return;
   }
 
   if (window.location.pathname.includes('queues/edit/')) {
-    const splitMembers = (qMembers).split(',')
-
-    for (let i = 0; i < splitMembers.length; i++) {
-      for (let j = 0; j < select2Arr.length; j++) {
-        if (select2Arr[j].id === splitMembers[i]) {
-          select2Arr[j].selected = true
-        }
-      }
-    }
-
-    $('.queue-member-select').select2({
-      data: select2Arr
-    })
-
-    const autopauseRadios = $('[name^=autopause-]')
+    const autopauseRadios = $('[name^=autopause-]');
     autopauseRadios.each(async function (oneRadio) {
-      const element = autopauseRadios[oneRadio]
+      const element = autopauseRadios[oneRadio];
       if (element.value === qAutoPause) {
-        element.checked = true
+        element.checked = true;
       }
-    })
+    });
 
-    const stratRadios = $('[name^=strat-radio]')
+    const stratRadios = $('[name^=strat-radio]');
     stratRadios.each(async function (oneRadio) {
-      const element = stratRadios[oneRadio]
+      const element = stratRadios[oneRadio];
       if (element.value === qStrategy) {
-        element.checked = true
+        element.checked = true;
       }
-    })
+    });
 
     $('#edit-queue-form').submit(async function (e) {
-      e.preventDefault()
+      e.preventDefault();
 
-      const id = qId
-      const name = $('#name').val()
-      const strategy = $('input[name="strat-radio"]:checked').val()
-      const timeout = $('#timeout').val()
-      const wrapuptime = $('#wrapuptime').val()
-      const autopause = $('input[name="autopause-radio"]:checked').val()
-      const members = $('.queue-member-select').select2('data')
-      const membersArr = []
-      for (let i = 0; i < members.length; i++) {
-        membersArr.push(members[i].id)
-      }
+      const id = qId;
+      const nume = $('#name').val();
+      const strategie = $('input[name="strat-radio"]:checked').val();
+      const timeout = $('#timeout').val();
+      const autopauza = $('input[name="autopause-radio"]:checked').val();
 
-      const membersStr = membersArr.join(',')
-      const res = await editQueue(id, name, strategy, timeout, wrapuptime, autopause, membersStr)
+      const res = await editQueue(id, nume, strategie, timeout, autopauza);
 
       if (res.error === true) {
         Swal.fire({
-          title: 'Error',
-          text: 'Could not edit queue',
+          title: 'Eroare',
+          text: 'Nu se poate edita intrarea',
           icon: 'error'
-        })
+        });
       } else {
         Swal.fire({
-          title: 'Success',
-          text: 'Queue edited',
+          title: 'Succes',
+          text: 'Intrare editată',
           icon: 'success'
         }).then((result) => {
           if (result.isConfirmed) {
-            window.location.reload()
+            window.location.reload();
           }
-        })
+        });
       }
-    })
+    });
   }
 
   if ($('#editQueueTable').length > 0) {
     for (let i = 0; i < queues.length; i++) {
       $('#editQueueList').append(`
             <tr>
-                <td data-label="Name">${queues[i].name}</td>
-                <td data-label="Strategy">${queues[i].strategy}</td>
-                <td data-label="Members">${queues[i].members}</td>
-                <td data-label="Created">
-                    <small class="text-gray-500" title="${queues[i].created_at}">${queues[i].created_at}</small>
+                <td data-label="Nume">${queues[i].nume}</td>
+                <td data-label="Strategie">${queues[i].strategie}</td>
+                <td data-label="Creată">
+                    <small class="text-gray-500" title="${queues[i].creat_la}">${queues[i].creat_la}</small>
                 </td>
                 <td class="actions-cell">
                     <div class="buttons right nowrap">
@@ -194,46 +151,46 @@ $(document).ready(async function () {
                     </div>
                 </td>
             </tr>
-            `)
+            `);
 
       $('.que-act-button').click(async function () {
-        const id = $(this).data('extid')
+        const id = $(this).data('extid');
         if ($(this).hasClass('red')) {
           const isConfirmed = await Swal.fire({
-            title: 'Are you sure?',
-            text: 'This action cannot be undone',
+            title: 'Ești sigur?',
+            text: 'Această acțiune nu poate fi anulată',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'Delete',
-            cancelButtonText: 'Cancel'
-          })
+            confirmButtonText: 'Șterge',
+            cancelButtonText: 'Anulează'
+          });
 
           if (isConfirmed.isConfirmed) {
-            const res = await deleteQueue(id)
+            const res = await deleteQueue(id);
             if (res.deleted === true) {
               await Swal.fire({
-                title: 'Success',
-                text: 'Queue deleted',
+                title: 'Succes',
+                text: 'Coadă ștearsă',
                 icon: 'success'
-              })
+              });
 
-              window.location.href = '/'
+              window.location.href = '/';
             } else {
               await Swal.fire({
-                title: 'Error',
-                text: 'Could not delete queue',
+                title: 'Eroare',
+                text: 'Nu se poate șterge intrarea',
                 icon: 'error'
-              })
+              });
 
-              window.location.reload()
+              window.location.reload();
             }
           } else {
-            window.location.reload()
+            window.location.reload();
           }
         } else {
-          window.location.href = `/queues/edit/${id}`
+          window.location.href = `/queues/edit/${id}`;
         }
-      })
+      });
     }
   }
-})
+});

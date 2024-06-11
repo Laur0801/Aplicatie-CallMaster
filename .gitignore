@@ -1,4 +1,4 @@
-.env
-db/zyvo.db
+.env.env
+db/CallMaster.db
 logs/
 node_modules/

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head.ejs') %>
+</head>
+<body>
+  <div id="app">
+    <%- include('partials/nav.ejs') %>
+    <%- include('partials/aside.ejs') %>
+
+    <section class="is-title-bar">
+      <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
+        <ul>
+          <li><%= parent %></li>
+          <li><%= title %></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section main-section">
+      <div class="card">
+        <header class="card-header">
+          <p class="card-header-title">
+            <span class="icon"><i class="mdi mdi-phone"></i></span>
+            Istoric Apeluri
+          </p>
+        </header>
+        <div class="card-content">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Data Apel</th>
+                <th>Număr Apelant</th>
+                <th>Număr Apelat</th>
+                <th>Durată</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% inregistrari_apeluri.forEach(function(apel) { %>
+              <tr>
+                <td><%= apel.id %></td>
+                <td><%= apel.data_apel %></td>
+                <td><%= apel.numar_apelant %></td>
+                <td><%= apel.numar_apelat %></td>
+                <td><%= apel.durata %></td>
+                <td><%= apel.status %></td>
+              </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+  <%- include('partials/footer.ejs') %>
+</body>
+</html>

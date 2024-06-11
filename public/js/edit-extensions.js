@@ -1,12 +1,12 @@
-/* global $, Swal, getExtensions, removeExtension */
+/* global $, Swal, loadExts, removeExtension */
 
 $(document).ready(async function () {
-  const extensions = await getExtensions()
+  const extensions = await loadExts()
 
   if (extensions.length < 1) {
     $('#editExtTable').html(`
             <tr>
-                <td colspan="8" class="text-center">No extensions to list</td>
+                <td colspan="8" class="text-center">Nu există extensii de listat</td>
             </tr>
         `)
   }
@@ -18,13 +18,13 @@ $(document).ready(async function () {
             <tr>
                 <td class="image-cell">
                     <div class="image">
-                        <img src="https://avatars.dicebear.com/v2/initials/${extension.name}.svg" class="rounded-full">
+                        <img src="https://avatars.dicebear.com/v2/initials/${extension.nume}.svg" class="rounded-full">
                     </div>
                 </td>
-                <td data-label="Name">${extension.name}</td>
-                <td data-label="Extension">${extension.extension}</td>
-                <td data-label="Created">
-                    <small class="text-gray-500" title="${extension.created_at}">${extension.created_at}</small>
+                <td data-label="Nume">${extension.nume}</td>
+                <td data-label="Extensie">${extension.extensie}</td>
+                <td data-label="Creată">
+                    <small class="text-gray-500" title="${extension.creat_la}">${extension.creat_la}</small>
                 </td>
                 <td class="actions-cell">
                     <div class="buttons right nowrap">
@@ -48,20 +48,20 @@ $(document).ready(async function () {
     const actionType = $(this).find('i').hasClass('mdi-eye') ? 'view' : 'remove'
     if (actionType === 'remove') {
       const result = await Swal.fire({
-        title: 'Are you sure?',
-        text: 'This action cannot be undone, this extension will be removed',
+        title: 'Ești sigur?',
+        text: 'Această acțiune nu poate fi anulată, extensia va fi eliminată',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Yes, remove it',
-        cancelButtonText: 'No, cancel'
+        confirmButtonText: 'Da, șterge',
+        cancelButtonText: 'Nu, anulează'
       })
 
       if (result.isConfirmed) {
         const ret = await removeExtension(extId)
         if (ret.deleted === true) {
           await Swal.fire({
-            title: 'Success',
-            text: 'Extension removed',
+            title: 'Succes',
+            text: 'Extensie ștearsă',
             icon: 'success',
             timer: 2000,
             showConfirmButton: false
@@ -70,8 +70,8 @@ $(document).ready(async function () {
           window.location.reload()
         } else {
           await Swal.fire({
-            title: 'Error',
-            text: 'An error occurred while removing this extension',
+            title: 'Eroare',
+            text: 'A apărut o eroare la ștergerea acestei extensii',
             icon: 'error',
             timer: 2000,
             showConfirmButton: false

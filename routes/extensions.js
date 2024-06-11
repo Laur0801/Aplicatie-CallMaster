@@ -1,87 +1,58 @@
-const express = require('express')
-const router = express.Router()
+const express = require('express');
+const router = express.Router();
 
-const {
-  getMaxId,
-  createExtension,
-  deleteExtension,
-  updateExtension
-} = require('../services/extensions')
-
-const {
-  getExtensions,
-  commitChanges
-} = require('../services/common')
-
-const {
-  defaultError
-} = require('../utils/defaults')
-
-const { ensureAuthenticated } = require('../services/auth')
+const { createExtension, deleteExtension, updateExtension, getMaxId, getOneExtension, loadExts } = require('../services/extensions');
+const { ensureAuthenticated } = require('../services/auth');
 
 router.get('/get_extensions', ensureAuthenticated, async (req, res) => {
   try {
-    const extensions = await getExtensions()
-    res.send(extensions)
+    const extensions = await loadExts();
+    res.send(extensions);
   } catch (error) {
-    console.log(error)
-    res.send(defaultError)
+    console.error(error);
+    res.send({ error: true, message: 'Eroare la încărcarea extensiilor' });
   }
-})
+});
 
 router.post('/create_extension', ensureAuthenticated, async (req, res) => {
   try {
-    const { name, extension, secret } = req.body
+    const { nume, extensie, parola } = req.body;
 
-    if (!name || !extension || !secret) {
-      res.send({ error: true, message: 'Missing parameters' })
-      return
+    if (!nume || !extensie || !parola) {
+      res.send({ error: true, message: 'Lipsesc parametrii' });
+      return;
     }
 
-    const newId = (!((await getMaxId()).max)) ? 1 : (parseInt(((await getMaxId()).max)) + 1)
-    const result = await createExtension(newId, name, extension, secret)
+    const newId = (!((await getMaxId()).max)) ? 1 : (parseInt(((await getMaxId()).max)) + 1);
+    const result = await createExtension(nume, extensie, parola);
 
-    res.send(result)
+    res.send(result);
   } catch (error) {
-    console.log(error)
-    res.send(defaultError)
+    console.error(error);
+    res.send({ error: true, message: 'Eroare la crearea extensiei' });
   }
-})
+});
 
 router.post('/delete_extension', ensureAuthenticated, async (req, res) => {
   try {
-    const { id } = req.body
-    const result = await deleteExtension(id)
-    res.send(result)
+    const { id } = req.body;
+    const result = await deleteExtension(id);
+    res.send(result);
   } catch (error) {
-    console.log(error)
-    res.send(defaultError)
+    console.error(error);
+    res.send({ error: true, message: 'Eroare la ștergerea extensiei' });
   }
-})
+});
 
 router.post('/update_extension', ensureAuthenticated, async (req, res) => {
   try {
-    const { id, name, extension, secret } = req.body
-    await updateExtension(id, name, extension, secret)
+    const { id, nume, extensie, parola } = req.body;
+    await updateExtension(id, nume, extensie, parola);
+    res.send({ error: false });
   } catch (error) {
-    console.log(error)
-    res.send(defaultError)
-    return
+    console.error(error);
+    res.send({ error: true, message: 'Eroare la actualizarea extensiei' });
   }
+});
 
-  res.send({ error: false })
-})
-
-router.post('/commit_changes', ensureAuthenticated, async (req, res) => {
-  try {
-    await commitChanges()
-  } catch (error) {
-    console.log(error)
-    res.send({ error: true })
-    return
-  }
-
-  res.send({ error: false, message: 'All updates made to asterisk configuration' })
-})
-
-module.exports = router
+module.exports = router;

@@ -10,75 +10,70 @@
     <div id="app">
 
         <%- include('partials/nav.ejs') %>
-            <%- include('partials/aside.ejs') %>
+        <%- include('partials/aside.ejs') %>
 
-                <section class="is-title-bar">
-                    <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
-                        <ul>
-                            <li>
-                                <%= parent %>
-                            </li>
-                            <li>
-                                <%= title %>
-                            </li>
-                        </ul>
-                    </div>
-                </section>
+        <section class="is-title-bar">
+            <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
+                <ul>
+                    <li>
+                        <%= parent %>
+                    </li>
+                    <li>
+                        <%= title %>
+                    </li>
+                </ul>
+            </div>
+        </section>
 
-                <section class="section main-section">
-                    <div class="card mb-6">
-                        <header class="card-header">
-                            <p class="card-header-title">
-                                <span class="icon"><i class="mdi mdi-settings"></i></span>
-                                Edit advanced settings of Asterisk
-                            </p>
-                        </header>
-                        <div class="card-content">
-                            <form method="get" id="sip-settings-form" data-type="cliCommand">
+        <section class="section main-section">
+            <div class="card mb-6">
+                <header class="card-header">
+                    <p class="card-header-title">
+                        <span class="icon"><i class="mdi mdi-settings"></i></span>
+                        Editează setările avansate ale Asterisk
+                    </p>
+                </header>
+                <div class="card-content">
+                    <form method="post" id="sip-settings-form" action="/advanced/sip/edit">
+                        <div class="field">
+                            <div class="field-body">
                                 <div class="field">
-                                    <div class="field-body">
-                                      <div class="field">
-                                        <label class="label">Bind Address <a class="required-field">*</a></label>
-                                        <div class="control icons-left">
-                                          <input class="input" type="text" placeholder="" id="bindAddr" value="<%= settings.bind_ip %>">
-                                          <span class="icon left"><i class="mdi mdi-lan-connect"></i></span>
-                                        </div>
-                                      </div>
+                                    <label class="label">Adresă Bind <a class="required-field">*</a></label>
+                                    <div class="control icons-left">
+                                        <input class="input" type="text" placeholder="" name="bindAddr" value="<%= settings.bind_ip %>">
+                                        <span class="icon left"><i class="mdi mdi-lan-connect"></i></span>
                                     </div>
-                                  </div>
-                                  <div class="field">
-                                    <div class="field-body">
-                                      <div class="field">
-                                        <label class="label">Bind Port <a class="required-field">*</a></label>
-                                        <div class="control icons-left">
-                                          <input class="input" type="text" placeholder="" id="bindPort" value="<%= settings.bind_port %>">
-                                          <span class="icon left"><i class="mdi mdi-serial-port"></i></span>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  <div id="trunk-settings">
-                                    
-                                  </div>
-
-                                  <div class="field grouped">
-                                    <div class="control">
-                                      <button type="submit" class="button red">
-                                        Change Settings
-                                      </button>
-                                    </div>
-                                  </div>
-                            </form>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </section>
+                        <div class="field">
+                            <div class="field-body">
+                                <div class="field">
+                                    <label class="label">Port Bind <a class="required-field">*</a></label>
+                                    <div class="control icons-left">
+                                        <input class="input" type="text" placeholder="" name="bindPort" value="<%= settings.bind_port %>">
+                                        <span class="icon left"><i class="mdi mdi-serial-port"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field grouped">
+                            <div class="control">
+                                <button type="submit" class="button red">
+                                    Schimbă setările
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
     </div>
     <%- include('partials/footer.ejs') %>
-        <script> 
-            const gatewayMapFrom = '<%- settings.default_gateway_map %>'
-        </script>
-        <script src="/js/common.js"></script>
-        <script src="/js/advanced-sip.js"></script>
+    <script>
+        const gatewayMapFrom = '<%= settings.default_gateway_map %>'
+    </script>
+    <script src="/js/common.js"></script>
+    <script src="/js/advanced-sip.js"></script>
 </body>
 </html>

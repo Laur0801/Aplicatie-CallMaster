@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="">
+<html lang="en">
 <head>
     <%- include('partials/head.ejs') %>
 </head>
@@ -24,17 +24,17 @@
       <header class="card-header">
         <p class="card-header-title">
           <span class="icon"><i class="mdi mdi-account-multiple"></i></span>
-          Create a new extension
+          Creare Extensie Nouă
         </p>
       </header>
       <div class="card-content">
-        <form method="get" id="create-extension-form">
+        <form method="post" id="create-extension-form">
           <div class="field">
-            <label class="label">Caller ID / Name <a class="required-field">*</a></label>
+            <label class="label">Caller ID / Nume <a class="required-field">*</a></label>
             <div class="field-body">
               <div class="field">
                 <div class="control icons-left">
-                  <input class="input" type="text" placeholder="Name" id="name">
+                  <input class="input" type="text" placeholder="Nume" name="nume" id="nume" required>
                   <span class="icon left"><i class="mdi mdi-account"></i></span>
                 </div>
               </div>
@@ -44,9 +44,9 @@
           <div class="field">
             <div class="field-body">
               <div class="field">
-                <label class="label">Extension <a class="required-field">*</a></label>
+                <label class="label">Extensie <a class="required-field">*</a></label>
                 <div class="control icons-left">
-                  <input class="input" type="text" placeholder="2020" id="extension">
+                  <input class="input" type="text" placeholder="6000" name="extensie" id="extensie" required>
                   <span class="icon left"><i class="mdi mdi-phone"></i></span>
                 </div>
               </div>
@@ -56,9 +56,9 @@
           <div class="field">
             <div class="field-body">
               <div class="field">
-                <label class="label">Secret <a class="required-field">*</a></label>
+                <label class="label">Parola <a class="required-field">*</a></label>
                 <div class="control icons-left">
-                  <input class="input" type="password" placeholder="secureP4ssw0rd" id="secret">
+                  <input class="input" type="password" placeholder="secureP4ssw0rd" name="parola" id="parola" required>
                   <span class="icon left"><i class="mdi mdi-asterisk"></i></span>
                 </div>
               </div>
@@ -70,12 +70,12 @@
           <div class="field grouped">
             <div class="control">
               <button type="submit" class="button green">
-                Submit
+                Trimite
               </button>
             </div>
             <div class="control">
               <button type="reset" class="button red">
-                Reset
+                Resetează
               </button>
             </div>
           </div>

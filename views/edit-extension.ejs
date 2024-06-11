@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="">
+<html lang="en">
 <head>
     <%- include('partials/head.ejs') %>
 </head>
@@ -11,78 +11,78 @@
     <%- include('partials/aside.ejs') %>
 
     <section class="is-title-bar">
-    <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
-        <ul>
-        <li><%= parent %></li>
-        <li><%= title %></li>
-        </ul>
-    </div>
+        <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
+            <ul>
+                <li><%= parent %></li>
+                <li><%= title %></li>
+            </ul>
+        </div>
     </section>
 
-  <section class="section main-section">
-    <div class="card mb-6">
-      <header class="card-header">
-        <p class="card-header-title">
-          <span class="icon"><i class="mdi mdi-account-multiple"></i></span>
-          <a class="">Editing Extension - <%= extensionDetails.extension %></a>
-        </p>
-      </header>
-      <div class="card-content">
-        <form method="get" id="edit-extension-form">
-          <div class="field">
-            <div class="field-body">
-              <div class="field">
-                <label class="label">Caller ID / Name <a class="required-field">*</a></label>
-                <div class="control icons-left">
-                  <input class="input" type="text" placeholder="Name" id="name" value="<%= extensionDetails.name %>">
-                  <span class="icon left"><i class="mdi mdi-account"></i></span>
-                </div>
-              </div>
-            </div>
-          </div>
+    <section class="section main-section">
+        <div class="card mb-6">
+            <header class="card-header">
+                <p class="card-header-title">
+                    <span class="icon"><i class="mdi mdi-account-multiple"></i></span>
+                    <a class="">Editare Extensie - <%= extensionDetails.extensie %></a>
+                </p>
+            </header>
+            <div class="card-content">
+                <form method="post" id="edit-extension-form">
+                    <input type="hidden" id="id" value="<%= extensionDetails.id %>">
+                    <div class="field">
+                        <div class="field-body">
+                            <div class="field">
+                                <label class="label">Caller ID / Nume <a class="required-field">*</a></label>
+                                <div class="control icons-left">
+                                    <input class="input" type="text" placeholder="Nume" id="nume" value="<%= extensionDetails.nume %>">
+                                    <span class="icon left"><i class="mdi mdi-account"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-          <div class="field">
-            <div class="field-body">
-              <div class="field">
-                <label class="label">Extension <a class="required-field">*</a></label>
-                <div class="control icons-left">
-                  <input class="input" type="text" placeholder="2020" id="extension" value="<%= extensionDetails.extension %>">
-                  <span class="icon left"><i class="mdi mdi-phone"></i></span>
-                </div>
-              </div>
-            </div>
-          </div>
+                    <div class="field">
+                        <div class="field-body">
+                            <div class="field">
+                                <label class="label">Extensie <a class="required-field">*</a></label>
+                                <div class="control icons-left">
+                                    <input class="input" type="text" placeholder="6000" id="extensie" value="<%= extensionDetails.extensie %>">
+                                    <span class="icon left"><i class="mdi mdi-phone"></i></span>
+                                </div>
+                        </div>
+                    </div>
 
-          <div class="field">
-            <div class="field-body">
-              <div class="field">
-                <label class="label">Secret <a class="required-field">*</a></label>
-                <div class="control icons-left">
-                  <input class="input" type="password" placeholder="secureP4ssw0rd" id="secret" value="<%= extensionDetails.secret %>">
-                  <span class="icon left"><i class="mdi mdi-asterisk"></i></span>
-                </div>
-              </div>
-            </div>
-          </div>
+                    <div class="field">
+                        <div class="field-body">
+                            <div class="field">
+                                <label class="label">Parola <a class="required-field">*</a></label>
+                                <div class="control icons-left">
+                                    <input class="input" type="password" placeholder="Parola" id="parola" value="<%= extensionDetails.parola %>">
+                                    <span class="icon left"><i class="mdi mdi-asterisk"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-          <hr>
+                    <hr>
 
-          <div class="field grouped">
-            <div class="control">
-              <button type="submit" class="button green">
-                Submit
-              </button>
+                    <div class="field grouped">
+                        <div class="control">
+                            <button type="submit" class="button green">
+                                Trimite
+                            </button>
+                        </div>
+                        <div class="control">
+                            <button type="reset" class="button red">
+                                Resetează
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <div class="control">
-              <button type="reset" class="button red">
-                Reset
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-  </section>
+        </div>
+    </section>
 </div>
 <%- include('partials/footer.ejs') %>
 <script src="/js/edit-extension.js"></script>

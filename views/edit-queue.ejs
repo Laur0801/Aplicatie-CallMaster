@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="">
+<html lang="ro" class="">
 <head>
     <%- include('partials/head.ejs') %>
 </head>
@@ -24,17 +24,17 @@
       <header class="card-header">
         <p class="card-header-title">
           <span class="icon"><i class="mdi mdi-account-settings"></i></span>
-          Editing - <%= queueDetails.name %>
+          Editare - <%= queueDetails.nume %>
         </p>
       </header>
       <div class="card-content">
         <form method="get" id="edit-queue-form">
           <div class="field">
-            <label class="label">Queue Name <a class="required-field">*</a></label>
+            <label class="label">Nume Apel <a class="required-field">*</a></label>
             <div class="field-body">
               <div class="field">
                 <div class="control icons-left">
-                  <input class="input" type="text" placeholder="Name" id="name" value="<%= queueDetails.name %>">
+                  <input class="input" type="text" placeholder="Nume" id="name" value="<%= queueDetails.nume %>">
                   <span class="icon left"><i class="mdi mdi-account-settings"></i></span>
                 </div>
               </div>
@@ -42,35 +42,28 @@
           </div>
 
           <div class="field">
-            <label class="label">Strategy <a class="required-field">*</a></label>
+            <label class="label">Strategie <a class="required-field">*</a></label>
             <div class="field-body">
               <div class="field grouped multiline">
                 <div class="control">
-                  <label class="radio" id="strat-radio-0" data-tippy="Default Asterisk Call Strategy which rings all available agents until the incoming call is answered.">
+                  <label class="radio" id="strat-radio-0" data-tippy="Strategia implicită a Asterisk care sună toți agenții disponibili până când apelul este preluat.">
                     <input type="radio" name="strat-radio" value="ringall">
                     <span class="check"></span>
-                    <span class="control-label">Ring All</span>
+                    <span class="control-label">Sună pe toți</span>
                   </label>
                 </div>
                 <div class="control">
-                  <label class="radio" id="strat-radio-1" data-tippy="Starts by first calling the interface (agent, user, extension etc) that was least recently hung up within the queue.">
+                  <label class="radio" id="strat-radio-1" data-tippy="Începe prin a apela interfața (agent, utilizator, extensie etc.) care a închis cel mai recent.">
                     <input type="radio" name="strat-radio" value="leastrecent">
                     <span class="check"></span>
-                    <span class="control-label">Least Recent</span>
+                    <span class="control-label">Cel mai puțin recent</span>
                   </label>
                 </div>
                 <div class="control">
-                  <label class="radio" id="strat-radio-2" data-tippy="Starts by calling a random interface first.">
+                  <label class="radio" id="strat-radio-2" data-tippy="Începe prin a apela o interfață aleatorie.">
                     <input type="radio" name="strat-radio" value="random">
                     <span class="check"></span>
-                    <span class="control-label">Random</span>
-                  </label>
-                </div>
-                <div class="control">
-                  <label class="radio" id="strat-radio-2" data-tippy="Round robin system which remembers which interface answered the last incoming call and starts with the next interface in the round robin.">
-                    <input type="radio" name="strat-radio" value="rrmemory">
-                    <span class="check"></span>
-                    <span class="control-label">Round Robin Memory</span>
+                    <span class="control-label">Aleatoriu</span>
                   </label>
                 </div>
               </div>
@@ -80,7 +73,7 @@
           <div class="field">
             <div class="field-body">
               <div class="field">
-                <label class="label">Timeout (in seconds) <a class="required-field">*</a></label>
+                <label class="label">Timp de așteptare (secunde) <a class="required-field">*</a></label>
                 <div class="control icons-left">
                   <input class="input" type="text" placeholder="15" id="timeout" value="<%= queueDetails.timeout %>">
                   <span class="icon left"><i class="mdi mdi-clock"></i></span>
@@ -91,44 +84,22 @@
 
           <div class="field">
             <div class="field-body">
-              <div class="field">
-                <label class="label">Wrap up time (in seconds) <a class="required-field">*</a></label>
-                <div class="control icons-left">
-                  <input class="input" type="text" placeholder="5" id="wrapuptime" value="<%= queueDetails.wrapuptime %>">
-                  <span class="icon left"><i class="mdi mdi-clock"></i></span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="field">
-            <div class="field-body">
-              <label class="label">Auto pause queue member<a class="required-field">*</a></label>
+              <label class="label">Auto-pauză pentru operator<a class="required-field">*</a></label>
               <div class="field grouped multiline">
                 <div class="control">
                   <label class="radio" id="auto-pause-radio-0">
                     <input type="radio" name="autopause-radio" value="yes">
                     <span class="check"></span>
-                    <span class="control-label">Yes</span>
+                    <span class="control-label">Da</span>
                   </label>
                 </div>
                 <div class="control">
                   <label class="radio" id="auto-pause-radio-1">
                     <input type="radio" name="autopause-radio" value="no">
                     <span class="check"></span>
-                    <span class="control-label">No</span>
+                    <span class="control-label">Nu</span>
                   </label>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="field">
-            <div class="field-body">
-              <div class="field">
-                <label class="label">Queue members <a class="required-field">*</a></label>
-                <select class="queue-member-select" name="members[]" multiple="multiple" style="width:50%">
-                </select>
               </div>
             </div>
           </div>
@@ -138,12 +109,12 @@
           <div class="field grouped">
             <div class="control">
               <button type="submit" class="button green">
-                Submit
+                Trimite
               </button>
             </div>
             <div class="control">
               <button type="reset" class="button red">
-                Reset
+                Resetează
               </button>
             </div>
           </div>
@@ -155,9 +126,8 @@
 <%- include('partials/footer.ejs') %>
 <script> 
   const qId = "<%= queueDetails.id %>";
-  const qMembers = '<%= queueDetails.members %>'; 
-  const qStrategy = '<%= queueDetails.strategy %>';
-  const qAutoPause = '<%= queueDetails.autopause %>';
+  const qStrategy = '<%= queueDetails.strategie %>';
+  const qAutoPause = '<%= queueDetails.autopauza %>';
 </script>
 <script src="/js/queue-general.js"></script>
 </body>

@@ -1,73 +1,97 @@
-const { exec } = require('child_process')
-const { promisify } = require('util')
-const { connect } = require('../db/db')
+const { Client } = require('ssh2');
+const { promisify } = require('util');
+const { connectMariaDB } = require('../db/db');
+const pidusage = require('pidusage');
 
-const process = require('process')
-const pidusage = require('pidusage')
-const execPromise = promisify(exec)
-const puPromise = promisify(pidusage)
+const sshConfig = {
+  host: '192.168.1.137', // IP-ul Raspberry Pi
+  port: 22,
+  username: 'laur_', // Username-ul de pe Raspberry Pi
+  password: '123456' // Parola de pe Raspberry Pi
+};
 
-async function getAsteriskPid () {
+const puPromise = promisify(pidusage);
+
+// Funcție pentru a obține utilizarea memoriei pentru un proces specific prin SSH
+async function getMemoryUsageSSH(processName) {
+  const command = `ps aux | grep ${processName} | grep -v grep | awk '{print $6}'`;
+  return new Promise((resolve, reject) => {
+    const conn = new Client();
+    conn.on('ready', () => {
+      conn.exec(command, (err, stream) => {
+        if (err) {
+          reject(err);
+        }
+        let data = '';
+        stream.on('data', (chunk) => {
+          data += chunk;
+        }).on('close', (code, signal) => {
+          conn.end();
+          resolve(parseFloat(data.trim()));
+        });
+      });
+    }).connect(sshConfig);
+  });
+}
+
+async function getAsteriskMemory() {
   try {
-    let { stdout } = await execPromise('ps -ef | grep asterisk | grep -v grep | grep -v rasterisk | awk \'{print $2}\'')
-    stdout = stdout.replace(/\n/g, '')
-    return parseInt(stdout)
+    return await getMemoryUsageSSH('asterisk');
   } catch (error) {
-    return null
+    console.error('Eroare la obținerea utilizării memoriei pentru Asterisk:', error);
+    return 0;
   }
 }
 
-async function getProcessPids () {
-  const zyvoPid = process.pid
-  const asteriskPid = await getAsteriskPid()
-
-  return {
-    zyvoPid,
-    asteriskPid
+async function getMariaDbMemory() {
+  try {
+    return await getMemoryUsageSSH('mariadb');
+  } catch (error) {
+    console.error('Eroare la obținerea utilizării memoriei pentru MariaDB:', error);
+    return 0;
   }
 }
 
-async function getProcessStats () {
-  const pids = await getProcessPids()
-  const asteriskPid = pids.asteriskPid
-  const zyvoPid = pids.zyvoPid
-
-  let [asteriskStats, zyvoStats] = await Promise.all([
-    puPromise(asteriskPid),
-    puPromise(zyvoPid)
-  ])
-
-  asteriskStats = {
-    memory: asteriskStats.memory,
-    timestamp: asteriskStats.timestamp
-  }
-
-  zyvoStats = {
-    memory: zyvoStats.memory,
-    timestamp: zyvoStats.timestamp
-  }
-
-  return {
-    asteriskStats,
-    zyvoStats
+async function getCallMasterMemory() {
+  try {
+    const stats = await puPromise(process.pid);
+    return stats.memory / 1024; // convert to KB
+  } catch (error) {
+    console.error('Eroare la obținerea utilizării memoriei pentru CallMaster:', error);
+    return 0;
   }
 }
 
-async function storeStats () {
-  const stats = await getProcessStats()
-  return connect(async db => {
-    await db.run('INSERT INTO stats (asterisk_stats, zyvo_stats) VALUES (?, ?)', [JSON.stringify(stats.asteriskStats), JSON.stringify(stats.zyvoStats)])
-    await db.run('DELETE FROM stats WHERE id NOT IN (SELECT id FROM stats ORDER BY created_at DESC LIMIT 10)')
-  })
+// Funcție pentru a colecta și stoca statistici
+async function storeStats() {
+  try {
+    const timestamp = new Date();
+    const asteriskMemory = await getAsteriskMemory();
+    const callMasterMemory = await getCallMasterMemory();
+    const mariaDbMemory = await getMariaDbMemory();
+
+    console.log(`Asterisk Memory: ${asteriskMemory}`);
+    console.log(`CallMaster Memory: ${callMasterMemory}`);
+    console.log(`MariaDB Memory: ${mariaDbMemory}`);
+
+    await connectMariaDB('INSERT INTO statistici (timestamp, asterisk_memory, callmaster_memory, mariadb_memory) VALUES (?, ?, ?, ?)', [timestamp, asteriskMemory, callMasterMemory, mariaDbMemory]);
+  } catch (error) {
+    console.error('Eroare la stocarea statisticilor:', error);
+  }
 }
 
-async function getStats () {
-  return connect(async db => {
-    return await db.all('SELECT * FROM stats ORDER BY created_at ASC')
-  })
+// Funcție pentru a încărca statisticile
+async function loadStats() {
+  try {
+    const result = await connectMariaDB('SELECT * FROM statistici ORDER BY timestamp DESC LIMIT 50');
+    return result;
+  } catch (error) {
+    console.error('Eroare la încărcarea statisticilor:', error);
+    return [];
+  }
 }
 
 module.exports = {
   storeStats,
-  getStats
-}
+  loadStats
+};

@@ -1,32 +1,49 @@
 /* global $, Swal, editExtension */
 
-$(document).ready(async function () {
-  /* On form submit */
+$(document).ready(function () {
   $('#edit-extension-form').submit(async function (e) {
-    e.preventDefault()
-    /* Get the current url */
-    const url = new URL(window.location.href)
-    const pathname = ((url.pathname).split('/'))
-    const id = pathname[pathname.length - 1]
-    const name = $('#name').val()
-    const extension = $('#extension').val()
-    const secret = $('#secret').val()
-    const response = await editExtension(id, name, extension, secret)
+    e.preventDefault();
+    
+    // Obține ID-ul din URL
+    const url = new URL(window.location.href);
+    const pathname = url.pathname.split('/');
+    const id = pathname[pathname.length - 1];
+    
+    // Obține valorile din formular
+    const nume = $('#nume').val();
+    const extensie = $('#extensie').val();
+    const parola = $('#parola').val();
 
-    if (response.error === true) {
+    // Trimite datele către server
+    const response = await editExtension(id, nume, extensie, parola);
+
+    if (response.error) {
       await Swal.fire({
         icon: 'error',
-        title: 'Error',
-        text: 'Could not edit extension'
-      })
+        title: 'Eroare',
+        text: 'Nu s-a putut edita extensia'
+      });
     } else {
       await Swal.fire({
         icon: 'success',
-        title: 'Success',
-        text: 'Extension edited'
-      })
+        title: 'Succes',
+        text: 'Extensie editată'
+      });
 
-      window.location.href = '/extensions/edit'
+      window.location.href = '/extensions/edit';
     }
-  })
-})
+  });
+});
+
+// Definim funcția `editExtension`
+async function editExtension(id, nume, extensie, parola) {
+  const response = await fetch('/api/extensions/update_extension', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ id, nume, extensie, parola })
+  });
+
+  return await response.json();
+}

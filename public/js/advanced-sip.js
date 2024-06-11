@@ -1,29 +1,7 @@
-/* global updateSipSettings, $, Swal, getTrunks, gatewayMapFrom */
-
+/* global updateSipSettings, $, Swal, loadTrunks, gatewayMapFrom */
+/*
 $(document).ready(async function () {
-  const trunks = await getTrunks()
-  const parsedGwMap = (gatewayMapFrom === '') ? '' : JSON.parse(gatewayMapFrom)
-
-  for (const trunk of trunks) {
-    let gwDo = ''
-    if (parsedGwMap !== '') {
-      gwDo = JSON.parse(gatewayMapFrom)[trunk.name]
-    }
-
-    $('#trunk-settings').append(`
-    <div class="field">
-      <div class="field-body">
-        <div class="field">
-          <label class="label">Dialout prefix for ${trunk.name} <a class="required-field">*</a></label>
-          <div class="control icons-left">
-            <input class="input" type="text" placeholder="" id="${trunk.name}-gwdo" value="${gwDo}">
-            <span class="icon left"><i class="mdi mdi-serial-port"></i></span>
-          </div>
-        </div>
-      </div>
-    </div><br>`)
-  }
-
+*/
   $('#sip-settings-form').submit(async function (e) {
     e.preventDefault()
 
@@ -39,7 +17,7 @@ $(document).ready(async function () {
       } else {
         await Swal.fire({
           icon: 'error',
-          title: 'Error',
+          title: 'Eroare',
           text: 'Please enter a valid dialout prefix, only numbers are allowed'
         })
         return
@@ -59,7 +37,7 @@ $(document).ready(async function () {
 
     if (!bindAddr.match(/^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)(\.(?!$)|$)){4}$/)) {
       await Swal.fire({
-        title: 'Error',
+        title: 'Eroare',
         text: 'Invalid bind address',
         icon: 'error'
       })
@@ -68,7 +46,7 @@ $(document).ready(async function () {
 
     if (!bindPort.match(/^[0-9]+$/)) {
       await Swal.fire({
-        title: 'Error',
+        title: 'Eroare',
         text: 'Invalid bind port',
         icon: 'error'
       })
@@ -78,16 +56,16 @@ $(document).ready(async function () {
     const res = await updateSipSettings(bindAddr, bindPort, gatewayMap)
     if (res.error !== true) {
       await Swal.fire({
-        title: 'Success',
-        text: 'SIP settings updated',
+        title: 'Succes',
+        text: 'Setările SIP actualizate',
         icon: 'success'
       })
     } else {
       await Swal.fire({
-        title: 'Error',
-        text: 'Error updating SIP settings',
+        title: 'Eroare',
+        text: 'Eroare în actualizarea setărilor SIP',
         icon: 'error'
       })
     }
   })
-})
+// })

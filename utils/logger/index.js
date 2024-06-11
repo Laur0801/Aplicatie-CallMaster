@@ -16,7 +16,7 @@ const logger = createLogger({
   ),
   transports: [
     new transports.Console({ level: 'info' }),
-    new transports.File({ filename: 'logs/zyvo.log', level: 'debug', maxsize: 5242880 })
+    new transports.File({ filename: 'logs/CallMaster.log', level: 'debug', maxsize: 5242880 })
   ]
 })
 

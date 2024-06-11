@@ -1,53 +1,62 @@
-const { exec } = require('child_process')
+const { exec } = require('child_process');
+const figlet = require('figlet');
+const pjson = require('../package.json'); // Asigură-te că calea este corectă
+const mariadb = require('mariadb');
 
-const figlet = require('figlet')
-const defaultError = { error: true }
-const pjson = require('../package.json')
+// Configurarea conexiunii la MariaDB
+const dbPool = mariadb.createPool({
+  host: '192.168.1.137',       // IP-ul Raspberry Pi
+  user: 'admin_departamente',  // Utilizatorul
+  password: 'secretpass123',   // Parola
+  database: 'asteriskdb',      // Baza de date
+  connectionLimit: 5
+});
 
-const asteriskConfig = {
+const configPaths = {
   sipConf: '/etc/asterisk/sip.conf',
   extensionsConf: '/etc/asterisk/extensions.conf',
   queuesConf: '/etc/asterisk/queues.conf',
   managerConf: '/etc/asterisk/manager.conf',
   modulesConf: '/etc/asterisk/modules.conf'
-}
+};
 
-const defaultUserConfig = {
-  sipConf: '/etc/asterisk/sip_zyvo_user.conf',
-  extensionsConf: '/etc/asterisk/extensions_zyvo_user.conf',
-  queuesConf: '/etc/asterisk/queues_zyvo_user.conf'
-}
+const userAsteriskConfig = {
+  sipConf: '/etc/asterisk/sip.conf',
+  extensionsConf: '/etc/asterisk/extensions.conf',
+  queuesConf: '/etc/asterisk/queues.conf'
+};
 
-async function asciiArt () {
+async function asciiArt() {
   return new Promise((resolve, reject) => {
-    figlet('Zyvo', function (err, data) {
+    figlet('CallMaster', function (err, data) {
       if (err) {
-        console.log(`Zyvo v${pjson.version}`)
+        console.log('Custom App v${pjson.version}');
+        console.error(err);
+        reject(err);
+      } else {
+        console.log(`${data}\n\tv${pjson.version}`);
+        resolve(data);
       }
-      console.log(`${data}\n\tv${pjson.version} by ${(pjson.author).split(' ')[0]}\n`)
-    })
-  })
+    });
+  });
 }
 
-async function checkIfAsteriskRunning () {
+async function isAsteriskActive() {
   return new Promise((resolve, reject) => {
     exec('ps -A | grep asterisk', (err, stdout, stderr) => {
       if (err) {
-        resolve(false)
+        console.error('Error checking Asterisk status', err);
+        resolve(false);
       }
-      if (stdout) {
-        resolve(true)
-      } else {
-        resolve(false)
-      }
-    })
-  })
+      resolve(stdout ? true : false);
+    });
+  });
 }
 
 module.exports = {
   asciiArt,
-  defaultError,
-  asteriskConfig,
-  defaultUserConfig,
-  checkIfAsteriskRunning
-}
+  configPaths,
+  userAsteriskConfig,
+  isAsteriskActive,
+  dbPool
+};

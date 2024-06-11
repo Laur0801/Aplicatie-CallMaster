@@ -1,126 +1,123 @@
-/* global $ Chart */
+const timestamps = [];
+const asteriskValues = [];
+const callMasterValues = [];
+const mariaDBValues = [];
 
-const timestamps = []
-const asteriskValues = []
-const zyvoValues = []
-
-async function getChartData () {
-  const response = await fetch('/stats')
-  const data = await response.json()
-
-  if (data.length < 9) {
-    $('#chartSec').hide()
-  }
-
-  for (let i = 0; i < data.length; i++) {
-    const timestamp = data[i].created_at
-    const asteriskStats = JSON.parse(data[i].asterisk_stats)
-    const zyvoStats = JSON.parse(data[i].zyvo_stats)
-
-    timestamps.push((new Date(timestamp)).getHours() + ':' + (new Date(timestamp)).getMinutes())
-    asteriskValues.push(((parseInt(asteriskStats.memory)) / 1000000).toFixed(2))
-    zyvoValues.push(((parseInt(zyvoStats.memory)) / 1000000).toFixed(2))
-  }
+// Funcție pentru a filtra datele la fiecare 5 minute
+function filterData(data) {
+    return data.filter((_, index) => index % 5 === 0);
 }
 
-async function drawChart () {
-  const chartColors = {
-    default: {
-      primary: '#00D1B2',
-      info: '#209CEE',
-      danger: '#FF3860'
-    }
-  }
-
-  const ctx = document.getElementById('big-line-chart').getContext('2d')
-
-  /* eslint-disable no-new */
-  new Chart(ctx, {
-    type: 'line',
-    display: true,
-    data: {
-      datasets: [{
-        label: 'Asterisk Memory Usage',
-        fill: true,
-        borderColor: chartColors.default.primary,
-        borderWidth: 2,
-        borderDash: [],
-        borderDashOffset: 0.0,
-        pointBackgroundColor: chartColors.default.primary,
-        pointBorderColor: 'rgba(255,255,255,0)',
-        pointHoverBackgroundColor: chartColors.default.primary,
-        pointBorderWidth: 20,
-        pointHoverRadius: 4,
-        pointHoverBorderWidth: 15,
-        pointRadius: 4,
-        data: asteriskValues
-      }, {
-        label: 'Zyvo Memory Usage',
-        fill: true,
-        borderColor: chartColors.default.info,
-        borderWidth: 2,
-        borderDash: [],
-        borderDashOffset: 0.0,
-        pointBackgroundColor: chartColors.default.info,
-        pointBorderColor: 'rgba(255,255,255,0)',
-        pointHoverBackgroundColor: chartColors.default.info,
-        pointBorderWidth: 20,
-        pointHoverRadius: 4,
-        pointHoverBorderWidth: 15,
-        pointRadius: 4,
-        data: zyvoValues
-      }],
-      labels: timestamps
-    },
-    options: {
-      maintainAspectRatio: false,
-      legend: {
-        display: false
-      },
-      responsive: true,
-      tooltips: {
-        backgroundColor: '#f5f5f5',
-        titleFontColor: '#333',
-        bodyFontColor: '#666',
-        bodySpacing: 4,
-        xPadding: 12,
-        mode: 'nearest',
-        intersect: 0,
-        position: 'nearest'
-      },
-      scales: {
-        yAxes: [{
-          barPercentage: 1.6,
-          gridLines: {
-            drawBorder: false,
-            color: 'rgba(29,140,248,0.0)',
-            zeroLineColor: 'transparent'
-          },
-          ticks: {
-            padding: 20,
-            fontColor: '#9a9a9a'
-          }
-        }],
-        xAxes: [{
-          barPercentage: 1.6,
-          gridLines: {
-            drawBorder: false,
-            color: 'rgba(225,78,202,0.1)',
-            zeroLineColor: 'transparent'
-          },
-          ticks: {
-            padding: 20,
-            fontColor: '#9a9a9a'
-          }
-        }]
-      }
-    }
-  })
+// Funcție pentru a formata data și ora
+function formatDateTime(date) {
+    const daysOfWeek = ["Dum", "Lun", "Mar", "Mie", "Joi", "Vin", "Sam"];
+    const day = daysOfWeek[date.getDay()];
+    const dateString = date.toISOString().split('T')[0]; // Format YYYY-MM-DD
+    const hours = date.getHours();
+    const minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
+    return `${day}, ${dateString} ${hours}:${minutes}`;
 }
 
-async function main () {
-  await getChartData()
-  await drawChart()
+async function getChartData() {
+    const response = await fetch('/api/core/stats');  
+    const data = await response.json();
+
+    const filteredData = filterData(data);
+
+    filteredData.forEach(stat => {
+        const date = new Date(stat.timestamp);
+        timestamps.push(formatDateTime(date));
+        asteriskValues.push(stat.asterisk_memory);
+        callMasterValues.push(stat.callmaster_memory);
+        mariaDBValues.push(stat.mariadb_memory);
+    });
 }
 
-main()
+async function drawChart() {
+    const ctx = document.getElementById('big-line-chart').getContext('2d');
+    const chartColors = {
+        asterisk: '#00D1B2',
+        callMaster: '#209CEE',
+        mariaDB: '#FF3860'
+    };
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: timestamps,
+            datasets: [{
+                label: 'Utilizare Memorie Asterisk',
+                backgroundColor: chartColors.asterisk,
+                borderColor: chartColors.asterisk,
+                data: asteriskValues,
+                fill: false,
+            }, {
+                label: 'Utilizare Memorie CallMaster',
+                backgroundColor: chartColors.callMaster,
+                borderColor: chartColors.callMaster,
+                data: callMasterValues,
+                fill: false,
+            }, {
+                label: 'Utilizare Memorie MariaDB',
+                backgroundColor: chartColors.mariaDB,
+                borderColor: chartColors.mariaDB,
+                data: mariaDBValues,
+                fill: false,
+            }]
+        },
+        options: {
+            responsive: true,
+            title: {
+                display: true,
+                text: 'Utilizarea Memoriei pe Servere'
+            },
+            tooltips: {
+                mode: 'index',
+                intersect: false,
+            },
+            hover: {
+                mode: 'nearest',
+                intersect: true
+            },
+            scales: {
+                xAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Data și Ora'
+                    },
+                    ticks: {
+                        maxTicksLimit: 10 // Reduce aglomerarea pe axa x
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Utilizare Memorie (KB)'
+                    }
+                }]
+            }
+        }
+    });
+}
+
+// Funcție pentru a reîmprospăta datele și graficul
+async function refreshChart() {
+    timestamps.length = 0;
+    asteriskValues.length = 0;
+    callMasterValues.length = 0;
+    mariaDBValues.length = 0;
+    await getChartData();
+    drawChart();
+}
+
+// Adăugarea unui eveniment de click pentru butonul de refresh
+document.querySelector('.mdi-reload').addEventListener('click', refreshChart);
+
+async function main() {
+    await getChartData();
+    await drawChart();
+}
+
+main();

@@ -10,130 +10,142 @@
   <div id="app">
 
     <%- include('partials/nav.ejs') %>
-      <%- include('partials/aside.ejs') %>
+    <%- include('partials/aside.ejs') %>
 
-      <section class="is-title-bar">
-        <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
-          <ul>
-            <li><%= parent %></li>
-            <li><%= title %></li>
-          </ul>
-        </div>
-      </section>
+    <section class="is-title-bar">
+      <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
+        <ul>
+          <li><%= parent %></li>
+          <li><%= title %></li>
+        </ul>
+      </div>
+    </section>
 
-      <section class="section main-section">
-        <div class="grid gap-6 grid-cols-1 md:grid-cols-3 mb-6">
-          <div class="card">
-            <div class="card-content">
-              <div class="flex items-center justify-between">
-                <div class="widget-label">
-                  <h3>
-                    Extensions
-                  </h3>
-                  <h1>
-                    <%= extensionsCount %>
-                  </h1>
-                </div>
-                <span class="icon widget-icon text-green-500"><i class="mdi mdi-account-multiple mdi-48px"></i></span>
-              </div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-content">
-              <div class="flex items-center justify-between">
-                <div class="widget-label">
-                  <h3>
-                    Trunks
-                  </h3>
-                  <h1>
-                   <%= trunksCount %>
-                  </h1>
-                </div>
-                <span class="icon widget-icon text-blue-500"><i class="mdi mdi-phone mdi-48px"></i></span>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-content">
-              <div class="flex items-center justify-between">
-                <div class="widget-label">
-                  <h3>
-                    <div class="mt-4">
-                      <% if(uptimeStats != 0) { %>
-                        <a class="bold">Uptime: <%= uptimeStats.uptime %></a> <br>
-                        <a class="pt-2">Last Reload: <%= uptimeStats.lastReload %></a>
-                      <% } else { %>
-                        <a class="bold">Asterisk Stopped</a>
-                      <% } %>
-                    </div>
-                  </h3>
-                </div>
-                <span class="icon widget-icon text-red-500"><i class="mdi mdi-timelapse mdi-48px"></i></span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card mb-6" id="chartSec">
-          <header class="card-header">
-            <p class="card-header-title">
-              <span class="icon"><i class="mdi mdi-finance"></i></span>
-              Performance
-            </p>
-            <a href="#" class="card-header-icon">
-              <span class="icon"><i class="mdi mdi-reload"></i></span>
-            </a>
-          </header>
+    <section class="section main-section">
+      <div class="grid gap-6 grid-cols-1 md:grid-cols-3 mb-6">
+        <div class="card">
           <div class="card-content">
-            <div class="chart-area">
-              <div class="h-full">
-                <div class="chartjs-size-monitor">
-                  <div class="chartjs-size-monitor-expand">
-                    <div></div>
-                  </div>
-                  <div class="chartjs-size-monitor-shrink">
-                    <div></div>
-                  </div>
-                </div>
-                <canvas id="big-line-chart" width="2992" height="1000" class="chartjs-render-monitor block"
-                  style="height: 400px; width: 1197px;"></canvas>
+            <div class="flex items-center justify-between">
+              <div class="widget-label">
+                <h3>
+                  Extensii
+                </h3>
+                <h1>
+                  <%= extensionsCount %>
+                </h1>
               </div>
+              <span class="icon widget-icon text-green-500"><i class="mdi mdi-account-multiple mdi-48px"></i></span>
             </div>
           </div>
         </div>
-
-        <div class="card has-table">
-          <header class="card-header">
-            <p class="card-header-title">
-              <span class="icon"><i class="mdi mdi-account-multiple"></i></span>
-              Extensions
-            </p>
-            <a href="#" class="card-header-icon">
-              <span class="icon"><i class="mdi mdi-reload"></i></span>
-            </a>
-          </header>
+        <div class="card">
           <div class="card-content">
-            <table id="dashExtTable">
-              <thead>
+            <div class="flex items-center justify-between">
+              <div class="widget-label">
+                <h3>
+                  Asterisk
+                </h3>
+                <div class="mt-4">
+                  <% if (asteriskStatus) { %>
+                    <a class="bold">Asterisk: Activ</a>
+                  <% } else { %>
+                    <a class="bold">Asterisk: Oprit</a>
+                  <% } %>
+                </div>
+              </div>
+              <span class="icon widget-icon <%= asteriskStatus ? 'text-green-500' : 'text-red-500' %>">
+                <i class="mdi mdi-timelapse mdi-48px"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-content">
+            <div class="flex items-center justify-between">
+              <div class="widget-label">
+                <h3>
+                  MariaDB
+                </h3>
+                <div class="mt-4">
+                  <% if (mariadbStatus) { %>
+                    <a class="bold">MariaDB: Activ</a>
+                  <% } else { %>
+                    <a class="bold">MariaDB: Oprit</a>
+                  <% } %>
+                </div>
+              </div>
+              <span class="icon widget-icon <%= mariadbStatus ? 'text-green-500' : 'text-red-500' %>">
+                <i class="mdi mdi-database mdi-48px"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-6" id="chartSec">
+        <header class="card-header">
+          <p class="card-header-title">
+            <span class="icon"><i class="mdi mdi-finance"></i></span>
+            Performanță
+          </p>
+          <a href="#" id="refresh-button" class="card-header-icon">
+            <span class="icon"><i class="mdi mdi-reload"></i></span>
+          </a>
+        </header>
+        <div class="card-content">
+          <div class="chart-area">
+            <div class="h-full">
+              <div class="chartjs-size-monitor">
+                <div class="chartjs-size-monitor-expand">
+                  <div></div>
+                </div>
+                <div class="chartjs-size-monitor-shrink">
+                  <div></div>
+                </div>
+              </div>
+              <canvas id="big-line-chart" width="2992" height="1000" class="chartjs-render-monitor block"
+                style="height: 400px; width: 1197px;"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card has-table">
+        <header class="card-header">
+          <p class="card-header-title">
+            <span class="icon"><i class="mdi mdi-account-multiple"></i></span>
+            Extensii
+          </p>
+          <a href="#" class="card-header-icon" id="refresh-extensions">
+            <span class="icon"><i class="mdi mdi-reload"></i></span>
+          </a>
+        </header>
+        <div class="card-content">
+          <table id="dashExtTable">
+            <thead>
+              <tr>
+                <th>Nume</th>
+                <th>Extensie</th>
+                <th>Parola</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% extensions.forEach(extension => { %>
                 <tr>
-                  <th></th>
-                  <th>Name</th>
-                  <th>Extension</th>
-                  <th>Created</th>
-                  <th></th>
+                  <td><%= extension.nume %></td>
+                  <td><%= extension.extensie %></td>
+                  <td><%= extension.parola %></td>
                 </tr>
-              </thead>
-              <tbody id="dashExtList">
-              </tbody>
-            </table>
-          </div>
+              <% }); %>
+            </tbody>
+          </table>
         </div>
-      </section>
+      </div>
+    </section>
   </div>
 
   <%- include('partials/footer.ejs') %>
   <script type="text/javascript" src="/js/chart.js"></script>
-  <script src="/js/dashboard.js"></script>
+  <script src="/js/Panou de control.js"></script>
 </body>
 </html>

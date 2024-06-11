@@ -1,4 +1,4 @@
-/* global $, Swal, commitChanges */
+/* global $, Swal */
 
 $(document).ready(async function () {
   /* on form submit */
@@ -6,9 +6,9 @@ $(document).ready(async function () {
     e.preventDefault()
 
     const sendObj = {
-      name: $('#name').val(),
-      extension: $('#extension').val(),
-      secret: $('#secret').val()
+      nume: $('#nume').val(),
+      extensie: $('#extensie').val(),
+      parola: $('#parola').val()
     }
 
     const response = await fetch('/api/extensions/create_extension', {
@@ -22,20 +22,18 @@ $(document).ready(async function () {
     const data = await response.json()
     if (data.error) {
       await Swal.fire({
-        title: 'Error',
+        title: 'Eroare',
         text: data.message,
         icon: 'error'
       })
     } else {
       await Swal.fire({
-        title: 'Success',
-        text: 'Extension created successfully',
+        title: 'Succes',
+        text: 'Extensia a fost creată cu succes',
         icon: 'success'
       })
 
-      await commitChanges()
-
-      window.location.href = '/'
+      window.location.href = '/extensions/edit'
     }
   })
 })

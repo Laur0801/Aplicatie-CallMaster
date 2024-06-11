@@ -29,8 +29,8 @@ $(document).ready(async function () {
 
   if (data.error) {
     await Swal.fire({
-      title: 'Error',
-      text: 'There was an error getting the core config',
+      title: 'Eroare',
+      text: 'A apărut o eroare la obținerea configurației de bază',
       icon: 'error'
     })
 
@@ -74,13 +74,13 @@ $(document).ready(async function () {
         const data = await request.json()
         if (data.error) {
           await Swal.fire({
-            title: 'Error',
-            text: 'There was an error updating the sip config',
+            title: 'Eroare',
+            text: 'A apărut o eroare la actualizarea configurației sip',
             icon: 'error'
           })
         } else {
           await Swal.fire({
-            title: 'Success',
+            title: 'Succes',
             text: 'Sip config updated successfully',
             icon: 'success'
           })
@@ -104,14 +104,14 @@ $(document).ready(async function () {
         const data = await request.json()
         if (data.error) {
           await Swal.fire({
-            title: 'Error',
-            text: 'There was an error updating the extensions config',
+            title: 'Eroare',
+            text: 'A apărut o eroare la actualizarea configurației extensiilor',
             icon: 'error'
           })
         } else {
           await Swal.fire({
-            title: 'Success',
-            text: 'Extensions config updated successfully',
+            title: 'Succes',
+            text: 'Configurația extensiilor a fost actualizată cu succes',
             icon: 'success'
           })
           window.location.reload()
@@ -133,14 +133,14 @@ $(document).ready(async function () {
         const data = await request.json()
         if (data.error) {
           await Swal.fire({
-            title: 'Error',
-            text: 'There was an error updating the queues config',
+            title: 'Eroare',
+            text: 'A apărut o eroare la actualizarea configurației cozilor',
             icon: 'error'
           })
         } else {
           await Swal.fire({
-            title: 'Success',
-            text: 'Queues config updated successfully',
+            title: 'Succes',
+            text: 'Configurația cozilor de așteptare a fost actualizată cu succes',
             icon: 'success'
           })
           window.location.reload()
@@ -171,8 +171,8 @@ $(document).ready(async function () {
 
     if (password !== password2) {
       await Swal.fire({
-        title: 'Error',
-        text: 'Passwords do not match',
+        title: 'Eroare',
+        text: 'Parolele nu se potrivesc',
         icon: 'error'
       })
 
@@ -193,14 +193,14 @@ $(document).ready(async function () {
     const data = await request.json()
     if (data.error !== false) {
       await Swal.fire({
-        title: 'Error',
-        text: 'Could not change credentials',
+        title: 'Eroare',
+        text: 'Nu s-au putut schimba acreditările',
         icon: 'error'
       })
     } else {
       await Swal.fire({
-        title: 'Success',
-        text: 'Credentials changed successfully',
+        title: 'Succes',
+        text: 'Credențialele au fost modificate cu succes',
         icon: 'success'
       })
 

@@ -10,205 +10,201 @@
     <div id="app">
 
         <%- include('partials/nav.ejs') %>
-            <%- include('partials/aside.ejs') %>
+        <%- include('partials/aside.ejs') %>
 
-                <section class="is-title-bar">
-                    <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
-                        <ul>
-                            <li>
-                                <%= parent %>
-                            </li>
-                            <li>
-                                <%= title %>
-                            </li>
-                        </ul>
-                    </div>
-                </section>
+        <section class="is-title-bar">
+            <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
+                <ul>
+                    <li>
+                        <%= parent %>
+                    </li>
+                    <li>
+                        <%= title %>
+                    </li>
+                </ul>
+            </div>
+        </section>
 
-                <section class="section main-section">
-                    <div class="card mb-6">
-                        <header class="card-header">
-                            <p class="card-header-title">
-                                <span class="icon"><i class="mdi mdi-settings"></i></span>
-                                Change Zyvo Username / Password
+        <section class="section main-section">
+            <div class="card mb-6">
+                <header class="card-header">
+                    <p class="card-header-title">
+                        <span class="icon"><i class="mdi mdi-settings"></i></span>
+                        Schimba CallMaster Nume / Parola
+                    </p>
+                </header>
+                <div class="card-content">
+                    <form id="credential-change">
+                        <div class="field">
+                            <label class="label">Nume <a class="required-field">*</a></label>
+                            <div class="field-body">
+                              <div class="field">
+                                <div class="control icons-left">
+                                  <input class="input" type="text" placeholder="Username" id="username">
+                                  <span class="icon left"><i class="mdi mdi-account"></i></span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="field">
+                            <label class="label">Parola <a class="required-field">*</a></label>
+                            <p class="control icons-left">
+                                <input class="input" type="password" name="password" placeholder="Password"
+                                    autocomplete="current-password" id="password">
+                                <span class="icon is-small left"><i class="mdi mdi-asterisk"></i></span>
                             </p>
-                        </header>
-                        <div class="card-content">
-                            <form id="credential-change">
-                                <div class="field">
-                                    <label class="label">Username <a class="required-field">*</a></label>
-                                    <div class="field-body">
-                                      <div class="field">
-                                        <div class="control icons-left">
-                                          <input class="input" type="text" placeholder="Username" id="username">
-                                          <span class="icon left"><i class="mdi mdi-account"></i></span>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="field">
-                                    <label class="label">Password <a class="required-field">*</a></label>
-                                    <p class="control icons-left">
-                                        <input class="input" type="password" name="password" placeholder="Password"
-                                            autocomplete="current-password" id="password">
-                                        <span class="icon is-small left"><i class="mdi mdi-asterisk"></i></span>
-                                    </p>
-                                </div>
-                                <div class="field">
-                                    <p class="control icons-left">
-                                        <input class="input" type="password" name="password" placeholder="Password"
-                                            autocomplete="current-password" id="password2">
-                                        <span class="icon is-small left"><i class="mdi mdi-asterisk"></i></span>
-                                    </p>
-                                    <p class="help">
-                                        Please confirm your password
-                                    </p>
-                                </div>
-                                <div class="field grouped">
-                                    <div class="control">
-                                      <button type="submit" class="button yellow">
-                                        Change
-                                      </button>
-                                    </div>
-                                    <div class="control">
-                                      <button type="reset" class="button red">
-                                        Reset
-                                      </button>
-                                    </div>
-                                  </div>
-                            </form>
                         </div>
-                    </div>
-                </section>
-
-                <section class="section main-section">
-                    <div class="card mb-6">
-                        <header class="card-header">
-                            <p class="card-header-title">
-                                <span class="icon"><i class="mdi mdi-file"></i></span>
-                                Asterisk CLI
+                        <div class="field">
+                            <p class="control icons-left">
+                                <input class="input" type="password" name="password" placeholder="Password"
+                                    autocomplete="current-password" id="password2">
+                                <span class="icon is-small left"><i class="mdi mdi-asterisk"></i></span>
                             </p>
-                        </header>
-                        <div class="card-content">
-                            <form method="get" id="manual-cli-command" data-type="cliCommand">
-                                <div class="field grouped">
-                                    <div class="control inline">
-                                        <input type="text" class="cli-input" id="cli-input" name="command" placeholder="core show uptime">
-                                        <button type="submit" class="button blue">
-                                            Execute
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="field">
-                                    <div class="field-body">
-                                        <div class="field">
-                                            <textarea id="cliOutput" class="cli-output" hidden></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </section>
-
-                <section class="section main-section">
-                    <div class="card mb-6">
-                        <header class="card-header">
-                            <p class="card-header-title">
-                                <span class="icon"><i class="mdi mdi-file"></i></span>
-                                Addition to sip.conf
+                            <p class="help">
+                                Te rog confirma parola
                             </p>
-                        </header>
-                        <div class="card-content">
-                            <form method="get" id="manual-edit-sip-conf" data-type="sipConf">
-                                <div class="field">
-                                    <div class="field-body">
-                                        <div class="field">
-                                            <div id="sipQuill">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="field grouped">
-                                    <div class="control">
-                                        <button type="submit" class="button green">
-                                            Save
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
                         </div>
-                    </div>
-                </section>
+                        <div class="field grouped">
+                            <div class="control">
+                              <button type="submit" class="button yellow">
+                                Schimbă
+                              </button>
+                            </div>
+                            <div class="control">
+                              <button type="reset" class="button red">
+                                Resetează
+                              </button>
+                            </div>
+                          </div>
+                    </form>
+                </div>
+            </div>
+        </section>
 
-                <section class="section main-section">
-                    <div class="card mb-6">
-                        <header class="card-header">
-                            <p class="card-header-title">
-                                <span class="icon"><i class="mdi mdi-file"></i></span>
-                                Addition to extensions.conf
-                            </p>
-                        </header>
-                        <div class="card-content">
-                            <form method="get" id="manual-edit-exten-conf" data-type="extConf">
-
-                                <div class="field">
-                                    <div class="field-body">
-                                        <div class="field">
-                                            <div id="extenQuill">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="field grouped">
-                                    <div class="control">
-                                        <button type="submit" class="button green">
-                                            Save
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
+        <section class="section main-section">
+            <div class="card mb-6">
+                <header class="card-header">
+                    <p class="card-header-title">
+                        <span class="icon"><i class="mdi mdi-file"></i></span>
+                        Asterisk CLI
+                    </p>
+                </header>
+                <div class="card-content">
+                    <form method="get" id="manual-cli-command" data-type="cliCommand">
+                        <div class="field grouped">
+                            <div class="control inline">
+                                <input type="text" class="cli-input" id="cli-input" name="command" placeholder="timpul de funcționare principal">
+                                <button type="submit" class="button blue">
+                                    Executați
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                </section>
-
-                <section class="section main-section">
-                    <div class="card mb-6">
-                        <header class="card-header">
-                            <p class="card-header-title">
-                                <span class="icon"><i class="mdi mdi-file"></i></span>
-                                Addition to queues.conf
-                            </p>
-                        </header>
-                        <div class="card-content">
-                            <form method="get" id="manual-edit-queues-conf" data-type="queConf">
-
+                        <div class="field">
+                            <div class="field-body">
                                 <div class="field">
-                                    <div class="field-body">
-                                        <div class="field">
-                                            <div id="queQuill">
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <textarea id="cliOutput" class="cli-output" hidden></textarea>
                                 </div>
-                                <hr>
-                                <div class="field grouped">
-                                    <div class="control">
-                                        <button type="submit" class="button green">
-                                            Save
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
+                            </div>
                         </div>
-                    </div>
-                </section>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section class="section main-section">
+            <div class="card mb-6">
+                <header class="card-header">
+                    <p class="card-header-title">
+                        <span class="icon"><i class="mdi mdi-file"></i></span>
+                        Adăugare la sip.conf
+                    </p>
+                </header>
+                <div class="card-content">
+                    <form method="get" id="manual-edit-sip-conf" data-type="sipConf">
+                        <div class="field">
+                            <div class="field-body">
+                                <div class="field">
+                                    <div id="sipQuill"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="field grouped">
+                            <div class="control">
+                                <button type="submit" class="button green">
+                                    Salvați
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section class="section main-section">
+            <div class="card mb-6">
+                <header class="card-header">
+                    <p class="card-header-title">
+                        <span class="icon"><i class="mdi mdi-file"></i></span>
+                        Adăugare la extensions.conf
+                    </p>
+                </header>
+                <div class="card-content">
+                    <form method="get" id="manual-edit-exten-conf" data-type="extConf">
+                        <div class="field">
+                            <div class="field-body">
+                                <div class="field">
+                                    <div id="extenQuill"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="field grouped">
+                            <div class="control">
+                                <button type="submit" class="button green">
+                                    Salvați
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section class="section main-section">
+            <div class="card mb-6">
+                <header class="card-header">
+                    <p class="card-header-title">
+                        <span class="icon"><i class="mdi mdi-file"></i></span>
+                        Adăugare la queues.conf
+                    </p>
+                </header>
+                <div class="card-content">
+                    <form method="get" id="manual-edit-queues-conf" data-type="queConf">
+                        <div class="field">
+                            <div class="field-body">
+                                <div class="field">
+                                    <div id="queQuill"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="field grouped">
+                            <div class="control">
+                                <button type="submit" class="button green">
+                                    Salvați
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
     </div>
     <%- include('partials/footer.ejs') %>
-        <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-        <script src="/js/common.js"></script>
-        <script src="/js/advanced.js"></script>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script src="/js/common.js"></script>
+    <script src="/js/advanced.js"></script>
 </body>
 </html>
+

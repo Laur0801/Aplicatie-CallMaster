@@ -1,12 +1,12 @@
 {
-  "name": "zyvo",
+  "name": "callmaster",
   "version": "0.0.1",
-  "description": "A simple web based management interface for asterisk",
+  "description": "Interfata web intuitiva pentru gestionarea apelurilor, destinata organizarii fluxurilor de comunicatie intre diferite departamente ale unei firme, utilizand serverul Asterisk",
   "main": "index.js",
   "scripts": {
     "lint": "standard .",
     "lint:fix": "standard --fix .",
-    "prepare": "husky install"
+    "start": "node index.js"
   },
   "standard": {
     "ignore": [
@@ -14,42 +14,28 @@
       "public/js/*sample.js"
     ]
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/AlchemillaHQ/zyvo.git"
-  },
-  "keywords": [
-    "asterisk",
-    "management",
-    "gui",
-    "freepbx"
-  ],
-  "author": "Alchemilla Private Limited",
-  "license": "GPL-3.0-or-later",
-  "bugs": {
-    "url": "https://github.com/AlchemillaHQ/zyvo/issues"
-  },
-  "homepage": "https://github.com/AlchemillaHQ/zyvo",
   "dependencies": {
+    "asterisk-ami-client": "^1.1.5",
     "asterisk-manager": "^0.2.0",
     "bcryptjs": "^2.4.3",
     "ding-dong": "^0.1.7",
-    "dotenv": "^16.0.3",
+    "dotenv": "^16.4.5",
     "ejs": "^3.1.8",
-    "express": "^4.18.2",
+    "express": "^4.19.2",
     "express-session": "^1.17.3",
     "figlet": "^1.5.2",
     "formidable": "^2.0.1",
+    "mariadb": "^2.5.5",
+    "moment-timezone": "^0.5.45",
     "node-cron": "^3.0.2",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
     "pidusage": "^3.0.1",
-    "sqlite": "^4.1.2",
-    "sqlite3": "^5.1.2",
+    "ssh2": "^1.15.0",
+    "ssh2-promise": "^1.0.3",
     "winston": "^3.8.2"
   },
   "devDependencies": {
-    "husky": "^8.0.0",
     "standard": "^17.0.0"
   }
 }

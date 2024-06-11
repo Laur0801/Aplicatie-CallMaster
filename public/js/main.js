@@ -1,4 +1,35 @@
 'use strict'
+'use strict';
+
+// Tema: schimbare zi/noapte
+function toggleTheme() {
+  const currentTheme = document.documentElement.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+}
+
+// Încărcarea temei salvate la încărcarea paginii
+document.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('theme') || 'light'; // Tema implicită este luminoasă
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  
+  const themeToggleBtn = document.getElementById('theme-toggle');
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', toggleTheme);
+  }
+});
+
+/* Aside & Navbar: dropdowns */
+Array.from(document.getElementsByClassName('dropdown')).forEach(function (elA) {
+  elA.addEventListener('click', function (e) {
+    // Restul codului pentru dropdowns
+  });
+});
+
+
+
+
 
 /* Aside & Navbar: dropdowns */
 Array.from(document.getElementsByClassName('dropdown')).forEach(function (elA) {

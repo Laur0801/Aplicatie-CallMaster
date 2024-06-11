@@ -1,5 +1,14 @@
-/*! tailwindcss v2.1.4 | MIT License | https://tailwindcss.com */
-/*! modern-normalize v1.1.0 | MIT License | https://github.com/sindresorhus/modern-normalize */
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+a {
+    color: var(--link-color);
+}
+
+
 *,
 ::after,
 ::before {
@@ -738,11 +747,13 @@ video {
 }
 
 .font-black {
-    font-weight: 900
+    font-weight: 900;
+    color: #000000;
 }
 
 .h-8 {
-    height: 2rem
+    height: 2rem;
+     
 }
 
 .h-48 {
@@ -771,7 +782,7 @@ video {
     /*!*/
     /*!*/
     --tw-ring-offset-width: 0px;
-    --tw-ring-offset-color: #fff;
+    --tw-ring-offset-color: #1e057752;
     --tw-ring-color: rgba(59, 130, 246, 0.5);
     --tw-ring-offset-shadow: 0 0 #0000;
     --tw-ring-shadow: 0 0 #0000
@@ -953,7 +964,7 @@ body {
 
 .aside {
     --tw-bg-opacity: 1;
-    background-color:#FAF9F6;
+    background-color:#fafaf6e3;
     height: 100vh;
     position: fixed;
     top: 0;
@@ -973,10 +984,11 @@ body {
 
 .aside-tools {
     --tw-bg-opacity: 1;
-    background-color: #800020;
+    background-color: #118a8a83;
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: center; 
     flex: 1 1 0%;
     height: 3.5rem;
     padding-left: .75rem;
@@ -1031,12 +1043,13 @@ body {
 
 .menu-list li>a:hover {
     --tw-bg-opacity: 1;
-    background-color: #800020;
+    background-color: #118a8a83;
     color: white;
 }
 
 .menu-list li a .menu-item-label {
-    flex-grow: 1
+    flex-grow: 1;
+    color: black
 }
 
 .menu-list li a .icon {
@@ -1046,7 +1059,7 @@ body {
 
 .menu-list li.active>a {
     --tw-bg-opacity: 1;
-    background-color: #800020;
+    background-color: #118a8a83;
     color: white;
 }
 
@@ -1064,7 +1077,7 @@ body {
 
 .menu-list li.active ul {
     --tw-bg-opacity: 1;
-    background-color: #800020;
+    background-color: #118a8a83;
     display: block
 }
 
@@ -1867,7 +1880,7 @@ footer {
 }
 
 .required-field {
-    color: #800020
+    color: #118a8a83
 }
 
 .cli-input {
@@ -1899,7 +1912,7 @@ footer {
     visibility: hidden;
     width: 120px;
     background-color: black;
-    color: #fff;
+    color: #1e057752;
     text-align: center;
     padding: 5px 0;
     border-radius: 6px;
@@ -1911,21 +1924,6 @@ footer {
 .tooltip:hover .tooltiptext {
     visibility: visible;
 }
-
-.input-ivr-action-text {
-    width: 10%;
-    height: 100%;
-    border: 1px solid #000;
-    border-radius: 5px;
-    font-family:monospace;
-    color: black;
-    background-color: white;
-}
-
-.ivr-handler-select {
-    height: 100%;
-}
-
 .fw-bold {
     font-weight: bold;
 }
